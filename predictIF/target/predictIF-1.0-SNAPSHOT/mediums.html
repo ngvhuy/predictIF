@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
+-->
+<html>
+    <head>
+        <title>Liste des médiums</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>Nos Experts Médiums</h1>
+        <ul id="liste-mediums">
+        </ul>
+        <script>
+            function initPage() {
+                console.log("Initialisation de la page");
+                listerMediums();
+            };
+            
+            async function listerMediums() {
+                console.log("Appel de l'Action: Consulter liste médiums");
+                let url = './ActionServlet?todo=consulter-liste-mediums'; // TODO : appeler l'ActionServlet pour lister les demandes
+                let jsonResponse = await fetch(url)
+                        .then(
+                            function(httpResponse) {
+                                return httpResponse.json();
+                            }
+                        )
+                        .catch(
+                            function(error) {
+                                console.log(error);
+                                return null;
+                            }
+                        );
+                console.log(jsonResponse);
+                if (jsonResponse) {
+                    console.log('Affichage de la liste de médiums');
+                    // TODO : afficher les demandes
+                    let ul = document.getElementById("liste-mediums");
+                    ul.innerHTML = "";
+                    
+                    jsonResponse.forEach(function(medium){
+                        let li = document.createElement('li');
+                        li.textContent = "#" + medium.id + ' : ' + medium.denomination + ', ' + medium.genre + ', ' + medium.presentation;
+                        ul.appendChild(li);
+                    });
+                }
+            }
+            window.onload = initPage;
+        </script>
+    </body>
+</html>

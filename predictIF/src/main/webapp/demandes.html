@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Demandes</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>Demandes</h1>
+        <a href="index.html">Retour à l'accueil</a>
+        <button id="bouton-lister-demandes">Lister les demandes</button>
+        <h2>Liste des demandes</h2>
+        <ul id="liste-demandes">
+        </ul>
+        <script>
+            function initPage() {
+                console.log("Initialisation de la page");
+                listerDemandes();
+                document.getElementById('bouton-lister-demandes').addEventListener('click', function() {
+                    console.log("Click sur le bouton 'Lister demandes'");
+                    listerDemandes();
+                });
+                
+            };
+            
+            async function listerDemandes() {
+                console.log("Appel de l'Action: Consulter liste demandes");
+                let url = './ActionServlet?todo=consulter-liste-demandes'; // TODO : appeler l'ActionServlet pour lister les demandes
+                let jsonResponse = await fetch(url)
+                        .then(
+                            function(httpResponse) {
+                                return httpResponse.json();
+                            }
+                        )
+                        .catch(
+                            function(error) {
+                                console.log(error);
+                                return null;
+                            }
+                        );
+                console.log(jsonResponse);
+                if (jsonResponse) {
+                    console.log('Affichage de la liste de demandes');
+                    // TODO : afficher les demandes
+                    let ul = document.getElementById("liste-demandes");
+                    ul.innerHTML = "";
+                    
+                    jsonResponse.forEach(function(demande){
+                        let li = document.createElement('li');
+                        let date = new Date(demande.dateCreation);
+                        li.textContent = "#" + demande.id + ' : ' + demande.description + ' faite le ' + date.toLocaleDateString('fr-FR') + ' à ' + date.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'});
+                        ul.appendChild(li);
+                    });
+                }
+            }
+            window.onload = initPage;
+        </script>
+    </body>
+</html>

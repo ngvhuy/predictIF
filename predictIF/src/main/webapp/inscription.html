@@ -50,12 +50,27 @@
         <script>
             document.getElementById("formConnexion").addEventListener("submit", function(e) {
                 e.preventDefault();
-
+                
+                const nom = document.getElementById("nom").value;
+                const prenom = document.getElementById("prenom").value;
                 const mail = document.getElementById("mail").value;
-                const password = document.getElementById("password").value;
+                const dateDeNaissance = document.getElementById("dateDeNaissance").value;
+                const adresse = document.getElementById("adresse").value;
+                const telephone = document.getElementById("telephone").value;
+                const password = document.getElementById("mdp").value;
+                const confirmation = document.getElementById("confirmationMdp").value;
+                
+                if (password !== confirmation) {
+                    document.getElementById("erreur").style.display = "block";
+                }
              
 
-                fetch("ActionServlet?todo=connexion&mail=" + encodeURIComponent(mail)
+                fetch("ActionServlet?todo=isncription&nom=" + encodeURIComponent(nom)
+                        + "&prenom=" + encodeURIComponent(prenom)
+                        + "&mail=" + encodeURIComponent(mail)
+                        + "&dateDeNaissance=" + encodeURIComponent(dateDeNaissance)
+                        + "&adresse=" + encodeURIComponent(adresse)
+                        + "&telephone=" + encodeURIComponent(telephone)
                         + "&password=" + encodeURIComponent(password))
                     .then(response => response.json())
                     .then(data => {

@@ -7,6 +7,12 @@
     <packaging>war</packaging>
     <name>predictIF-1.0-SNAPSHOT</name>
     
+    <scm>
+        <connection>scm:git:https://github.com/ngvhuy/predictIF.git</connection>
+        <developerConnection>scm:git:https://github.com/ngvhuy/predictIF.git</developerConnection>
+        <url>https://github.com/ngvhuy/predictIF</url>
+    </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jakartaee>10.0.0</jakartaee>

@@ -12,21 +12,19 @@
             Identifiants incorrects. Veuillez réessayer.
         </div>
 
-        <form id="formConnexion">
+        <div id="formConnexion">
             <label>Email :</label><br>
             <input type="email" id="mail" name="mail" required><br><br>
 
             <label>Mot de passe :</label><br>
             <input type="password" id="password" name="password" required><br><br>
 
-            <label>Profil :</label><br>
-            <select id="profil" name="profil">
-                <option value="client">Client</option>
-                <option value="employe">Employé</option>
-            </select><br><br>
+            <br><br>
+            <label>Pas de compte ?</label>
+            <a href='/predictIF/inscription.html'> S'inscrire</a>
 
             <button type="submit">Se connecter</button>
-        </form>
+        </div>
 
         <script>
             document.getElementById("formConnexion").addEventListener("submit", function(e) {
@@ -34,11 +32,10 @@
 
                 const mail = document.getElementById("mail").value;
                 const password = document.getElementById("password").value;
-                const profil = document.getElementById("profil").value;
+             
 
                 fetch("ActionServlet?todo=connexion&mail=" + encodeURIComponent(mail)
-                        + "&password=" + encodeURIComponent(password)
-                        + "&profil=" + encodeURIComponent(profil))
+                        + "&password=" + encodeURIComponent(password))
                     .then(response => response.json())
                     .then(data => {
                         if (data.succes) {

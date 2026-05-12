@@ -1,8 +1,10 @@
 web\modele\ConsulterListeMediums.class
 web\controleur\ActionServlet.class
 web\modele\Action.class
+web\vue\pageConnexion.class
 web\test\ServiceTest.class
 web\vue\Serialisation.class
 web\modele\ConsulterListeDemandesAction.class
+web\modele\Connexion.class
 web\test\DemandeTest.class
 web\vue\ListeMediumsSerialisation.class

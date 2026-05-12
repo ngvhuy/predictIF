@@ -12,31 +12,23 @@ public class Connexion extends Action {
     public void execute(HttpServletRequest request) {
         String mail = request.getParameter("mail");
         String password = request.getParameter("password");
-        String profil = request.getParameter("profil");
 
         Service service = new Service();
         HttpSession session = request.getSession();
-
-        if ("client".equals(profil)) {
-            Client client = service.authentifierClient(mail, password);
-            if (client != null) {
-                session.setAttribute("clientConnecte", client);
-                session.setAttribute("profil", "client");
-                request.setAttribute("succes", true);
-                request.setAttribute("redirection", "espaceClient.html");
-            } else {
-                request.setAttribute("succes", false);
-            }
-        } else if ("employe".equals(profil)) {
-            Employe employe = service.authentifierEmploye(mail, password);
-            if (employe != null) {
-                session.setAttribute("employeConnecte", employe);
-                session.setAttribute("profil", "employe");
-                request.setAttribute("succes", true);
-                request.setAttribute("redirection", "espaceEmploye.html");
-            } else {
-                request.setAttribute("succes", false);
-            }
+        
+        Client client = service.authentifierClient(mail, password);
+        Employe employe = service.authentifierEmploye(mail, password);
+        if (client != null) {
+            session.setAttribute("clientConnecte", client);
+            session.setAttribute("profil", "client");
+            request.setAttribute("succes", true);
+            request.setAttribute("redirection", "espaceClient.html");
+            
+        } else if (employe != null) {
+            session.setAttribute("employeConnecte", employe);
+            session.setAttribute("profil", "employe");
+            request.setAttribute("succes", true);
+            request.setAttribute("redirection", "espaceEmploye.html");
         } else {
             request.setAttribute("succes", false);
         }

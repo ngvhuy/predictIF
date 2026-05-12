@@ -1,16 +1,53 @@
 <!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
--->
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title>Connexion</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
         <h1>Connexion</h1>
-        
+
+        <div id="erreur" style="color:red; display:none;">
+            Identifiants incorrects. Veuillez réessayer.
+        </div>
+
+        <div id="formConnexion">
+            <label>Email :</label><br>
+            <input type="email" id="mail" name="mail" placeholder="victor.hugo@insa-lyon.fr" required><br><br>
+
+            <label>Mot de passe :</label><br>
+            <input type="password" id="password" name="password" placeholder="password123" required><br><br>
+
+            <br><br>
+            <label>Pas de compte ?</label>
+            <a href='/predictIF/inscription.html'> S'inscrire</a>
+
+            <button type="submit">Se connecter</button>
+        </div>
+
+        <script>
+            document.getElementById("formConnexion").addEventListener("submit", function(e) {
+                e.preventDefault();
+
+                const mail = document.getElementById("mail").value;
+                const password = document.getElementById("password").value;
+             
+
+                fetch("ActionServlet?todo=connexion&mail=" + encodeURIComponent(mail)
+                        + "&password=" + encodeURIComponent(password))
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.succes) {
+                            window.location.href = data.redirection;
+                        } else {
+                            document.getElementById("erreur").style.display = "block";
+                        }
+                    })
+                    .catch(() => {
+                        document.getElementById("erreur").style.display = "block";
+                    });
+            });
+        </script>
     </body>
 </html>

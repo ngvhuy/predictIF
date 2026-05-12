@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Inscription</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>Inscription</h1>
+        <h2>Rejoignez Prédict'IF et découvrez votre avenir !</h2>
+
+        <div id="erreur" style="color:red; display:none;">
+            Inscription échouée.
+        </div>
+
+        <div id="formInscription">
+            <label>Nom :</label><br>
+            <input type='text' id="nom" name="nom" placeholder="Hugo" required><br><br>
+
+            <label>Prénom :</label><br>
+            <input type="text" id="prenom" name="prenom" placeholder="Victor" required><br><br>
+            
+            <label>Mail :</label><br>
+            <input type="email" id="email" name="email" placeholder="victor.hugo@insa-lyon.fr" required><br><br>
+            
+            <label>Date de naissance :</label><br>
+            <input type="date" id="dateDeNaissance" name="dateDeNaissance"  required><br><br>
+
+            <label>Adresse postale :</label><br>
+            <input type="text" id="adresse" name="adresse" placeholder="13 rue Albert Einstein 69100 Villeurbanne"  required><br><br>
+            
+            <label>Numéro de tel :</label><br>
+            <input type="text" id="telephone" name="telephone" placeholder="+33 6 78 91 23 45"  required><br><br>
+            
+            <label>Mot de passe :</label><br>
+            <input type="password" id="mdp" name="mdp" placeholder="password123"  required><br><br>
+            
+            <label>Confirmation mdp :</label><br>
+            <input type="password" id="confirmationMdp" name="confirmationMdp" placeholder="password123"  required><br><br>
+            
+            <br><br>
+
+            <button type="submit">CREER MON COMPTE</button>
+            
+            <label>Déjà inscrit ?</label>
+            <a href='/predictIF/connexion.html'> Connectez-vous</a>
+            
+        </div>
+
+        <script>
+            document.getElementById("formConnexion").addEventListener("submit", function(e) {
+                e.preventDefault();
+
+                const mail = document.getElementById("mail").value;
+                const password = document.getElementById("password").value;
+             
+
+                fetch("ActionServlet?todo=connexion&mail=" + encodeURIComponent(mail)
+                        + "&password=" + encodeURIComponent(password))
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.succes) {
+                            window.location.href = data.redirection;
+                        } else {
+                            document.getElementById("erreur").style.display = "block";
+                        }
+                    })
+                    .catch(() => {
+                        document.getElementById("erreur").style.display = "block";
+                    });
+            });
+        </script>
+    </body>
+</html>

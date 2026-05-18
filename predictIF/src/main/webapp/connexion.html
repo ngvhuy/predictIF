@@ -1,40 +1,185 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Connexion</title>
+        <title>Connexion — Predict'IF</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+
+            body {
+                font-family: Georgia, serif;
+                background-color: #0d0d1a;
+                color: #e8d5b7;
+            }
+
+            nav {
+                background-color: #0a0818;
+                border-bottom: 1px solid #2a1a4e;
+                padding: 0 40px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                height: 50px;
+            }
+
+            nav .nav-logo {
+                font-size: 1rem;
+                color: #c9a84c;
+                letter-spacing: 3px;
+                text-decoration: none;
+                text-transform: uppercase;
+            }
+
+            nav ul {
+                list-style: none;
+                display: flex;
+                gap: 30px;
+            }
+
+            nav ul li a {
+                color: #a89070;
+                text-decoration: none;
+                font-size: 0.9rem;
+                letter-spacing: 1px;
+                transition: color 0.2s;
+            }
+
+            nav ul li a:hover { color: #c9a84c; }
+            nav ul li a.deconnexion { color: #e05555; }
+            nav ul li a.deconnexion:hover { color: #ff7070; }
+
+            .page-content {
+                max-width: 480px;
+                margin: 80px auto;
+                padding: 0 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+                color: #c9a84c;
+                letter-spacing: 4px;
+                text-align: center;
+                margin-bottom: 40px;
+            }
+
+            .erreur {
+                color: #e05555;
+                background-color: #2a0d0d;
+                border: 1px solid #5a1a1a;
+                border-radius: 4px;
+                padding: 10px 16px;
+                margin-bottom: 20px;
+                font-size: 0.9rem;
+                display: none;
+            }
+
+            label {
+                display: block;
+                font-size: 0.85rem;
+                color: #a89070;
+                letter-spacing: 1px;
+                margin-bottom: 6px;
+            }
+
+            input {
+                width: 100%;
+                padding: 10px 14px;
+                background-color: #13102a;
+                border: 1px solid #3a2a5e;
+                border-radius: 4px;
+                color: #e8d5b7;
+                font-family: Georgia, serif;
+                font-size: 0.95rem;
+                margin-bottom: 20px;
+            }
+
+            input:focus {
+                outline: none;
+                border-color: #c9a84c;
+            }
+
+            button {
+                width: 100%;
+                padding: 12px;
+                background-color: #c9a84c;
+                color: #0d0d1a;
+                border: none;
+                border-radius: 4px;
+                font-family: Georgia, serif;
+                font-size: 1rem;
+                letter-spacing: 2px;
+                cursor: pointer;
+                margin-top: 10px;
+            }
+
+            button:hover { background-color: #e8c86a; }
+
+            .lien-bas {
+                text-align: center;
+                margin-top: 24px;
+                font-size: 0.9rem;
+                color: #a89070;
+            }
+
+            .lien-bas a {
+                color: #c9a84c;
+                text-decoration: underline;
+            }
+        </style>
     </head>
     <body>
-        <h1>Connexion</h1>
 
-        <div id="erreur" style="color:red; display:none;">
-            Identifiants incorrects. Veuillez réessayer.
-        </div>
+        <nav>
+            <a class="nav-logo" href="index.html">Predict'IF</a>
+            <ul id="nav-liens"></ul>
+        </nav>
 
-        <div id="formConnexion">
-            <label>Email :</label><br>
-            <input type="email" id="mail" name="mail" placeholder="victor.hugo@insa-lyon.fr" required><br><br>
+        <div class="page-content">
+            <h1>Connexion</h1>
 
-            <label>Mot de passe :</label><br>
-            <input type="password" id="password" name="password" placeholder="password123" required><br><br>
+            <div class="erreur" id="erreur">
+                Identifiants incorrects. Veuillez réessayer.
+            </div>
 
-            <br><br>
-            <label>Pas de compte ?</label>
-            <a href='/predictIF/inscription.html'> S'inscrire</a>
+            <div id="formConnexion">
+                <label>Email</label>
+                <input type="email" id="mail" name="mail" placeholder="victor.hugo@insa-lyon.fr" required>
 
-            <button type="submit">Se connecter</button>
+                <label>Mot de passe</label>
+                <input type="password" id="password" name="password" placeholder="password123" required>
+
+                <button type="submit">Se connecter</button>
+            </div>
+
+            <div class="lien-bas">
+                Pas de compte ? <a href="inscription.html">S'inscrire</a>
+            </div>
         </div>
 
         <script>
+            const NAV = {
+                "": ['<li><a href="index.html">Accueil</a></li>','<li><a href="mediums.html">Liste des médiums</a></li>','<li><a href="connexion.html">Connexion</a></li>','<li><a href="inscription.html">Inscription</a></li>'],
+                "client": ['<li><a href="index.html">Accueil</a></li>','<li><a href="mediums.html">Liste des médiums</a></li>','<li><a href="historiqueClient.html">Historique</a></li>','<li><a href="profilAstral.html">Profil Astral</a></li>','<li><a href="#" class="deconnexion" id="btnDeconnexion">Déconnexion</a></li>'],
+                "employe": ['<li><a href="index.html">Accueil</a></li>','<li><a href="mediums.html">Liste des médiums</a></li>','<li><a href="maConsultation.html">Ma Consultation</a></li>','<li><a href="carteClients.html">Carte Clients</a></li>','<li><a href="graphique.html">Graphique</a></li>','<li><a href="#" class="deconnexion" id="btnDeconnexion">Déconnexion</a></li>']
+            };
+            async function chargerNav() {
+                try {
+                    const res = await fetch("/predictIF/ActionServlet?todo=session");
+                    const data = await res.json();
+                    document.getElementById("nav-liens").innerHTML = (NAV[data.profil || ""] || NAV[""]).join("");
+                    const btn = document.getElementById("btnDeconnexion");
+                    if (btn) btn.addEventListener("click", function(e) { e.preventDefault(); fetch("/predictIF/ActionServlet?todo=deconnexion").then(() => { window.location.href = "index.html"; }); });
+                } catch(e) { document.getElementById("nav-liens").innerHTML = NAV[""].join(""); }
+            }
+            window.onload = chargerNav;
+
             document.getElementById("formConnexion").addEventListener("submit", function(e) {
                 e.preventDefault();
-
                 const mail = document.getElementById("mail").value;
                 const password = document.getElementById("password").value;
-             
 
-                fetch("ActionServlet?todo=connexion&mail=" + encodeURIComponent(mail)
+                fetch("/predictIF/ActionServlet?todo=connexion&mail=" + encodeURIComponent(mail)
                         + "&password=" + encodeURIComponent(password))
                     .then(response => response.json())
                     .then(data => {
@@ -49,5 +194,6 @@
                     });
             });
         </script>
+
     </body>
 </html>

@@ -12,6 +12,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.json.Json;
+import jakarta.servlet.http.HttpSession;
 import web.modele.Action;
 import web.modele.Connexion;
 import web.modele.ConsulterListeDemandesAction;
@@ -59,6 +61,26 @@ public class ActionServlet extends HttpServlet {
                 actionConnexion.execute(request);
                 Serialisation serialisationConnexion = new pageConnexion();
                 serialisationConnexion.appliquer(request, response);
+                break;
+            case "session":
+                HttpSession sess = request.getSession(false);
+                String profil = (sess != null) ? (String) sess.getAttribute("profil") : null;
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                PrintWriter pw = response.getWriter();
+                pw.write(Json.createObjectBuilder()
+                        .add("profil", profil != null ? profil : "")
+                        .build().toString());
+                pw.close();
+                break;
+            case "deconnexion":
+                HttpSession sessLogout = request.getSession(false);
+                if (sessLogout != null) sessLogout.invalidate();
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                PrintWriter pwLogout = response.getWriter();
+                pwLogout.write("{\"succes\":true}");
+                pwLogout.close();
                 break;
             default:
                 

@@ -1,54 +1,151 @@
 <!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
--->
 <html>
     <head>
-        <title>Liste des médiums</title>
+        <title>Nos médiums — Predict'IF</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+
+            body {
+                font-family: Georgia, serif;
+                background-color: #0d0d1a;
+                color: #e8d5b7;
+            }
+
+            nav {
+                background-color: #0a0818;
+                border-bottom: 1px solid #2a1a4e;
+                padding: 0 40px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                height: 50px;
+            }
+
+            nav .nav-logo {
+                font-size: 1rem;
+                color: #c9a84c;
+                letter-spacing: 3px;
+                text-decoration: none;
+                text-transform: uppercase;
+            }
+
+            nav ul {
+                list-style: none;
+                display: flex;
+                gap: 30px;
+            }
+
+            nav ul li a {
+                color: #a89070;
+                text-decoration: none;
+                font-size: 0.9rem;
+                letter-spacing: 1px;
+                transition: color 0.2s;
+            }
+
+            nav ul li a:hover { color: #c9a84c; }
+            nav ul li a.deconnexion { color: #e05555; }
+            nav ul li a.deconnexion:hover { color: #ff7070; }
+
+            .page-content {
+                max-width: 800px;
+                margin: 60px auto 80px;
+                padding: 0 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+                color: #c9a84c;
+                letter-spacing: 4px;
+                text-align: center;
+                margin-bottom: 40px;
+            }
+
+            .liste-mediums {
+                list-style: none;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .liste-mediums li {
+                background-color: #13102a;
+                border: 1px solid #3a2a5e;
+                border-radius: 6px;
+                padding: 20px 24px;
+                line-height: 1.7;
+            }
+
+            .medium-nom {
+                font-size: 1.1rem;
+                color: #c9a84c;
+                margin-bottom: 4px;
+            }
+
+            .medium-genre {
+                font-size: 0.85rem;
+                color: #a89070;
+                font-style: italic;
+                margin-bottom: 8px;
+            }
+
+            .medium-presentation {
+                font-size: 0.95rem;
+                color: #e8d5b7;
+            }
+        </style>
     </head>
     <body>
-        <h1>Nos Experts Médiums</h1>
-        <ul id="liste-mediums">
-        </ul>
+
+        <nav>
+            <a class="nav-logo" href="index.html">Predict'IF</a>
+            <ul id="nav-liens"></ul>
+        </nav>
+
+        <div class="page-content">
+            <h1>Nos Médiums</h1>
+            <ul class="liste-mediums" id="liste-mediums">
+                <li>Chargement...</li>
+            </ul>
+        </div>
+
         <script>
-            function initPage() {
-                console.log("Initialisation de la page");
-                listerMediums();
+            const NAV = {
+                "": ['<li><a href="index.html">Accueil</a></li>','<li><a href="mediums.html">Liste des médiums</a></li>','<li><a href="connexion.html">Connexion</a></li>','<li><a href="inscription.html">Inscription</a></li>'],
+                "client": ['<li><a href="index.html">Accueil</a></li>','<li><a href="mediums.html">Liste des médiums</a></li>','<li><a href="historiqueClient.html">Historique</a></li>','<li><a href="profilAstral.html">Profil Astral</a></li>','<li><a href="#" class="deconnexion" id="btnDeconnexion">Déconnexion</a></li>'],
+                "employe": ['<li><a href="index.html">Accueil</a></li>','<li><a href="mediums.html">Liste des médiums</a></li>','<li><a href="maConsultation.html">Ma Consultation</a></li>','<li><a href="carteClients.html">Carte Clients</a></li>','<li><a href="graphique.html">Graphique</a></li>','<li><a href="#" class="deconnexion" id="btnDeconnexion">Déconnexion</a></li>']
             };
-            
+            async function chargerNav() {
+                try {
+                    const res = await fetch("/predictIF/ActionServlet?todo=session");
+                    const data = await res.json();
+                    document.getElementById("nav-liens").innerHTML = (NAV[data.profil || ""] || NAV[""]).join("");
+                    const btn = document.getElementById("btnDeconnexion");
+                    if (btn) btn.addEventListener("click", function(e) { e.preventDefault(); fetch("/predictIF/ActionServlet?todo=deconnexion").then(() => { window.location.href = "index.html"; }); });
+                } catch(e) { document.getElementById("nav-liens").innerHTML = NAV[""].join(""); }
+            }
+
             async function listerMediums() {
-                console.log("Appel de l'Action: Consulter liste médiums");
-                let url = './ActionServlet?todo=consulter-liste-mediums'; // TODO : appeler l'ActionServlet pour lister les demandes
-                let jsonResponse = await fetch(url)
-                        .then(
-                            function(httpResponse) {
-                                return httpResponse.json();
-                            }
-                        )
-                        .catch(
-                            function(error) {
-                                console.log(error);
-                                return null;
-                            }
-                        );
-                console.log(jsonResponse);
-                if (jsonResponse) {
-                    console.log('Affichage de la liste de médiums');
-                    // TODO : afficher les demandes
-                    let ul = document.getElementById("liste-mediums");
+                try {
+                    const response = await fetch("/predictIF/ActionServlet?todo=consulter-liste-mediums");
+                    const mediums = await response.json();
+                    const ul = document.getElementById("liste-mediums");
                     ul.innerHTML = "";
-                    
-                    jsonResponse.forEach(function(medium){
-                        let li = document.createElement('li');
-                        li.textContent = "#" + medium.id + ' : ' + medium.denomination + ', ' + medium.genre + ', ' + medium.presentation;
+                    mediums.forEach(function(m) {
+                        const li = document.createElement("li");
+                        li.innerHTML = '<div class="medium-nom">' + m.denomination + '</div>'
+                                     + '<div class="medium-genre">' + m.genre + '</div>'
+                                     + '<div class="medium-presentation">' + m.presentation + '</div>';
                         ul.appendChild(li);
                     });
+                } catch (e) {
+                    document.getElementById("liste-mediums").innerHTML = "<li>Impossible de charger les médiums.</li>";
                 }
             }
-            window.onload = initPage;
+            window.onload = function() { chargerNav(); listerMediums(); };
         </script>
+
     </body>
 </html>

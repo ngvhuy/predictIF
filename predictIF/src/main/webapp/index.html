@@ -4,161 +4,28 @@
         <title>PredictIF</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
         <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-
-            body {
-                font-family: Georgia, serif;
-                background-color: #0d0d1a;
-                color: #e8d5b7;
-            }
-
-            /* HEADER */
             header {
                 text-align: center;
                 padding: 60px 20px 40px;
                 background: linear-gradient(180deg, #1a0a2e 0%, #0d0d1a 100%);
                 border-bottom: 1px solid #3a2a5e;
             }
+            header h1 { font-size: 3.5rem; letter-spacing: 8px; color: #c9a84c; text-transform: uppercase; }
+            header p { margin-top: 12px; font-size: 1.1rem; color: #a89070; font-style: italic; }
 
-            header h1 {
-                font-size: 3.5rem;
-                letter-spacing: 8px;
-                color: #c9a84c;
-                text-transform: uppercase;
-            }
+            .section-mediums { max-width: 800px; margin: 60px auto 0; padding: 0 20px; text-align: center; }
+            .section-mediums h2 { font-size: 1.6rem; color: #c9a84c; margin-bottom: 30px; letter-spacing: 2px; }
+            .liste-mediums-apercu { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+            .liste-mediums-apercu li { font-size: 1.1rem; color: #e8d5b7; padding: 10px 0; border-bottom: 1px solid #2a1a4e; }
+            .lien-voir-tous { display: inline-block; margin-top: 8px; font-size: 0.9rem; color: #a89070; text-decoration: underline; font-style: italic; }
+            .lien-voir-tous:hover { color: #c9a84c; }
 
-            header p {
-                margin-top: 12px;
-                font-size: 1.1rem;
-                color: #a89070;
-                font-style: italic;
-            }
-
-            /* SECTION MEDIUMS */
-            .section-mediums {
-                max-width: 800px;
-                margin: 60px auto 0;
-                padding: 0 20px;
-                text-align: center;
-            }
-
-            .section-mediums h2 {
-                font-size: 1.6rem;
-                color: #c9a84c;
-                margin-bottom: 30px;
-                letter-spacing: 2px;
-            }
-
-            .liste-mediums-apercu {
-                list-style: none;
-                display: flex;
-                flex-direction: column;
-                gap: 12px;
-                margin-bottom: 20px;
-            }
-
-            .liste-mediums-apercu li {
-                font-size: 1.1rem;
-                color: #e8d5b7;
-                padding: 10px 0;
-                border-bottom: 1px solid #2a1a4e;
-            }
-
-            .lien-voir-tous {
-                display: inline-block;
-                margin-top: 8px;
-                font-size: 0.9rem;
-                color: #a89070;
-                text-decoration: underline;
-                font-style: italic;
-            }
-
-            .lien-voir-tous:hover {
-                color: #c9a84c;
-            }
-
-            /* SECTION CARTES */
-            .section-cartes {
-                max-width: 900px;
-                margin: 60px auto 80px;
-                padding: 0 20px;
-                display: flex;
-                gap: 30px;
-            }
-
-            .carte {
-                flex: 1;
-                border: 1px solid #3a2a5e;
-                border-radius: 8px;
-                padding: 40px 30px;
-                text-align: center;
-                background-color: #13102a;
-            }
-
-            .carte p {
-                font-size: 1.05rem;
-                color: #a89070;
-                margin-bottom: 25px;
-                line-height: 1.6;
-            }
-
-            .carte button {
-                padding: 12px 28px;
-                font-size: 0.95rem;
-                font-family: Georgia, serif;
-                background-color: #c9a84c;
-                color: #0d0d1a;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                letter-spacing: 1px;
-            }
-
-            .carte button:hover {
-                background-color: #e8c86a;
-            }
-
-            /* NAV */
-            nav {
-                background-color: #0a0818;
-                border-bottom: 1px solid #2a1a4e;
-                padding: 0 40px;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                height: 50px;
-            }
-
-            nav .nav-logo {
-                font-size: 1rem;
-                color: #c9a84c;
-                letter-spacing: 3px;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            nav ul {
-                list-style: none;
-                display: flex;
-                gap: 30px;
-            }
-
-            nav ul li a {
-                color: #a89070;
-                text-decoration: none;
-                font-size: 0.9rem;
-                letter-spacing: 1px;
-                transition: color 0.2s;
-            }
-
-            nav ul li a:hover { color: #c9a84c; }
-            nav ul li a.deconnexion { color: #e05555; }
-            nav ul li a.deconnexion:hover { color: #ff7070; }
+            .section-cartes { max-width: 900px; margin: 60px auto 80px; padding: 0 20px; display: flex; gap: 30px; }
+            .carte { flex: 1; border: 1px solid #3a2a5e; border-radius: 8px; padding: 40px 30px; text-align: center; background-color: #13102a; }
+            .carte p { font-size: 1.05rem; color: #a89070; margin-bottom: 25px; line-height: 1.6; }
+            .carte button { padding: 12px 28px; font-size: 0.95rem; width: auto; letter-spacing: 1px; }
         </style>
     </head>
     <body>
@@ -192,41 +59,8 @@
             </div>
         </section>
 
+        <script src="nav.js"></script>
         <script>
-            const NAV = {
-                "": ['<li><a href="index.html">Accueil</a></li>',
-                     '<li><a href="mediums.html">Liste des médiums</a></li>',
-                     '<li><a href="connexion.html">Connexion</a></li>',
-                     '<li><a href="inscription.html">Inscription</a></li>'],
-                "client": ['<li><a href="index.html">Accueil</a></li>',
-                           '<li><a href="mediums.html">Liste des médiums</a></li>',
-                           '<li><a href="historiqueClient.html">Historique</a></li>',
-                           '<li><a href="profilAstral.html">Profil Astral</a></li>',
-                           '<li><a href="#" class="deconnexion" id="btnDeconnexion">Déconnexion</a></li>'],
-                "employe": ['<li><a href="index.html">Accueil</a></li>',
-                            '<li><a href="mediums.html">Liste des médiums</a></li>',
-                            '<li><a href="maConsultation.html">Ma Consultation</a></li>',
-                            '<li><a href="carteClients.html">Carte Clients</a></li>',
-                            '<li><a href="graphique.html">Graphique</a></li>',
-                            '<li><a href="#" class="deconnexion" id="btnDeconnexion">Déconnexion</a></li>']
-            };
-
-            async function chargerNav() {
-                try {
-                    const res = await fetch("/predictIF/ActionServlet?todo=session");
-                    const data = await res.json();
-                    const profil = data.profil || "";
-                    document.getElementById("nav-liens").innerHTML = (NAV[profil] || NAV[""]).join("");
-                    const btn = document.getElementById("btnDeconnexion");
-                    if (btn) btn.addEventListener("click", function(e) {
-                        e.preventDefault();
-                        fetch("/predictIF/ActionServlet?todo=deconnexion").then(() => { window.location.href = "index.html"; });
-                    });
-                } catch(e) {
-                    document.getElementById("nav-liens").innerHTML = NAV[""].join("");
-                }
-            }
-
             async function chargerApercuMediums() {
                 try {
                     const response = await fetch("/predictIF/ActionServlet?todo=consulter-liste-mediums");

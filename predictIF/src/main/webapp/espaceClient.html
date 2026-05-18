@@ -4,40 +4,12 @@
         <title>Espace Client — Predict'IF</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { font-family: Georgia, serif; background-color: #0d0d1a; color: #e8d5b7; }
-            nav {
-                background-color: #0a0818;
-                border-bottom: 1px solid #2a1a4e;
-                padding: 0 40px;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                height: 50px;
-            }
-            nav .nav-logo { font-size: 1rem; color: #c9a84c; letter-spacing: 3px; text-decoration: none; text-transform: uppercase; }
-            nav ul { list-style: none; display: flex; gap: 30px; }
-            nav ul li a { color: #a89070; text-decoration: none; font-size: 0.9rem; letter-spacing: 1px; transition: color 0.2s; }
-            nav ul li a:hover { color: #c9a84c; }
-            nav ul li a.deconnexion { color: #e05555; }
-            nav ul li a.deconnexion:hover { color: #ff7070; }
-            .page-content { max-width: 800px; margin: 60px auto 80px; padding: 0 20px; }
-            h1 { font-size: 2rem; color: #c9a84c; letter-spacing: 4px; text-align: center; margin-bottom: 12px; }
-            .sous-titre { text-align: center; color: #a89070; font-style: italic; margin-bottom: 40px; }
-        </style>
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
-
         <nav>
             <a class="nav-logo" href="index.html">Predict'IF</a>
-            <ul>
-                <li><a href="index.html">Accueil</a></li>
-                <li><a href="mediums.html">Liste des médiums</a></li>
-                <li><a href="historiqueClient.html">Historique</a></li>
-                <li><a href="profilAstral.html">Profil Astral</a></li>
-                <li><a href="#" class="deconnexion" id="btnDeconnexion">Déconnexion</a></li>
-            </ul>
+            <ul id="nav-liens"></ul>
         </nav>
 
         <div class="page-content">
@@ -45,13 +17,9 @@
             <p class="sous-titre">Bienvenue sur votre espace personnel.</p>
         </div>
 
+        <script src="nav.js"></script>
         <script>
-            document.getElementById("btnDeconnexion").addEventListener("click", function(e) {
-                e.preventDefault();
-                fetch("/predictIF/ActionServlet?todo=deconnexion")
-                    .then(() => { window.location.href = "index.html"; });
-            });
+            window.onload = chargerNav;
         </script>
-
     </body>
 </html>

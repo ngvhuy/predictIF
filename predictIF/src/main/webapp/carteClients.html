@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Carte Clients — Predict'IF</title>
+        <title>Répartition Géographique — Predict'IF</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="style.css">
-        <style>
-            .client-nom { font-size: 1.05rem; color: #c9a84c; margin-bottom: 4px; }
-            .client-info { font-size: 0.9rem; color: #a89070; }
-        </style>
     </head>
     <body>
         <nav>
@@ -17,18 +13,13 @@
         </nav>
 
         <div class="page-content">
-            <h1>Carte Clients</h1>
-            <ul class="liste" id="liste-clients">
-                <li>Chargement...</li>
-            </ul>
+            <h1>Répartition Géographique</h1>
+            <div class="placeholder">Carte à intégrer.</div>
         </div>
 
         <script src="nav.js"></script>
         <script>
-            window.onload = function() {
-                chargerNav();
-                document.getElementById("liste-clients").innerHTML = "<li>Aucun client pour le moment.</li>";
-            };
+            window.onload = function() { chargerNav(); chargerFooter(); };
         </script>
     </body>
 </html>

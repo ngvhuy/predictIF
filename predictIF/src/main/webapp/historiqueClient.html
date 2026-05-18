@@ -5,6 +5,98 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="style.css">
+        <style>
+            h1 { font-size: 1.8rem; letter-spacing: 2px; margin-bottom: 30px; }
+
+            .filtres {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+                margin-bottom: 30px;
+                justify-content: center;
+            }
+
+            .filtres label {
+                display: inline;
+                font-size: 0.95rem;
+                color: #e8d5b7;
+                letter-spacing: 0;
+                margin-bottom: 0;
+            }
+
+            .filtres input[type="date"],
+            .filtres select {
+                padding: 6px 12px;
+                background-color: #13102a;
+                border: 1px solid #3a2a5e;
+                border-radius: 4px;
+                color: #e8d5b7;
+                font-family: Georgia, serif;
+                font-size: 0.9rem;
+                margin-bottom: 0;
+                width: auto;
+            }
+
+            .filtres select option { background-color: #13102a; }
+
+            .bloc-consultations {
+                background-color: #13102a;
+                border: 1px solid #3a2a5e;
+                border-radius: 6px;
+                overflow: hidden;
+            }
+
+            .consultation {
+                display: flex;
+                align-items: flex-start;
+                gap: 14px;
+                padding: 16px 20px;
+                border-bottom: 1px solid #2a1a4e;
+                cursor: pointer;
+            }
+
+            .consultation:last-child { border-bottom: none; }
+
+            .avatar {
+                width: 42px;
+                height: 42px;
+                border-radius: 50%;
+                background-color: #3a1a6e;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+
+            .avatar svg { width: 24px; height: 24px; fill: #c9a84c; }
+
+            .consultation-info { flex: 1; }
+
+            .consultation-medium { font-size: 1rem; color: #e8d5b7; font-weight: bold; }
+
+            .consultation-date { font-size: 0.8rem; color: #a89070; margin-top: 2px; }
+
+            .consultation-lien {
+                font-size: 0.85rem;
+                color: #c9a84c;
+                white-space: nowrap;
+                align-self: center;
+            }
+
+            .consultation-lien.aucun { color: #6a5a7a; }
+
+            .commentaire-bloc {
+                display: none;
+                background-color: #0f0d22;
+                border-left: 3px solid #c9a84c;
+                margin: 0 20px 16px 76px;
+                padding: 12px 16px;
+                font-size: 0.9rem;
+                color: #a89070;
+                font-style: italic;
+                line-height: 1.6;
+            }
+        </style>
     </head>
     <body>
         <nav>
@@ -13,17 +105,112 @@
         </nav>
 
         <div class="page-content">
-            <h1>Historique</h1>
-            <ul class="liste" id="liste-historique">
-                <li>Chargement...</li>
-            </ul>
+            <h1>Historique des Consultations</h1>
+
+            <div class="filtres">
+                <label>Date :</label>
+                <input type="date" id="filtre-date">
+                <label>Médium :</label>
+                <select id="filtre-medium">
+                    <option value="">Tous les médiums</option>
+                </select>
+            </div>
+
+            <div class="bloc-consultations" id="bloc-consultations">
+                <div class="consultation"><div class="consultation-info"><div class="consultation-medium">Chargement...</div></div></div>
+            </div>
         </div>
 
         <script src="nav.js"></script>
         <script>
+            const AVATAR_SVG = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>';
+
+            let toutesConsultations = [];
+
+            function afficher(liste) {
+                const bloc = document.getElementById("bloc-consultations");
+                bloc.innerHTML = "";
+
+                if (liste.length === 0) {
+                    bloc.innerHTML = '<div class="consultation"><div class="consultation-info"><div class="consultation-medium">Aucune consultation trouvée.</div></div></div>';
+                    return;
+                }
+
+                liste.forEach(function(c) {
+                    const row = document.createElement("div");
+                    row.className = "consultation";
+                    row.innerHTML =
+                        '<div class="avatar">' + AVATAR_SVG + '</div>'
+                      + '<div class="consultation-info">'
+                      +   '<div class="consultation-medium">' + c.medium + '</div>'
+                      +   '<div class="consultation-date">' + c.date + '</div>'
+                      + '</div>'
+                      + (c.commentaire
+                          ? '<span class="consultation-lien">Commentaire +</span>'
+                          : '<span class="consultation-lien aucun">Aucun commentaire</span>');
+
+                    const commentaireBloc = document.createElement("div");
+                    commentaireBloc.className = "commentaire-bloc";
+                    if (c.commentaire) {
+                        commentaireBloc.textContent = c.commentaire;
+                        row.addEventListener("click", function() {
+                            const ouvert = commentaireBloc.style.display === "block";
+                            commentaireBloc.style.display = ouvert ? "none" : "block";
+                        });
+                    }
+
+                    bloc.appendChild(row);
+                    bloc.appendChild(commentaireBloc);
+                });
+
+                const select = document.getElementById("filtre-medium");
+                const mediums = [...new Set(liste.map(c => c.medium))];
+                const valActuelle = select.value;
+                select.innerHTML = '<option value="">Tous les médiums</option>';
+                mediums.forEach(m => {
+                    const opt = document.createElement("option");
+                    opt.value = m;
+                    opt.textContent = m;
+                    if (m === valActuelle) opt.selected = true;
+                    select.appendChild(opt);
+                });
+            }
+
+            function filtrer() {
+                const date = document.getElementById("filtre-date").value;
+                const medium = document.getElementById("filtre-medium").value;
+                const filtrees = toutesConsultations.filter(function(c) {
+                    const matchDate = !date || c.date === date;
+                    const matchMedium = !medium || c.medium === medium;
+                    return matchDate && matchMedium;
+                });
+                afficher(filtrees);
+            }
+
+            async function chargerHistorique() {
+                try {
+                    const res = await fetch("/predictIF/ActionServlet?todo=historique-client");
+                    const data = await res.json();
+                    if (data.erreur) {
+                        document.getElementById("bloc-consultations").innerHTML =
+                            '<div class="consultation"><div class="consultation-info"><div class="consultation-medium">Veuillez vous connecter.</div></div></div>';
+                        return;
+                    }
+                    toutesConsultations = data;
+                    afficher(toutesConsultations);
+                } catch(e) {
+                    document.getElementById("bloc-consultations").innerHTML =
+                        '<div class="consultation"><div class="consultation-info"><div class="consultation-medium">Erreur de chargement.</div></div></div>';
+                }
+            }
+
+            document.getElementById("filtre-date").addEventListener("change", filtrer);
+            document.getElementById("filtre-medium").addEventListener("change", filtrer);
+
             window.onload = function() {
                 chargerNav();
-                document.getElementById("liste-historique").innerHTML = "<li>Aucune consultation pour le moment.</li>";
+                chargerFooter();
+                chargerHistorique();
             };
         </script>
     </body>

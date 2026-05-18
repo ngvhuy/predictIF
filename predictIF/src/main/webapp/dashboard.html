@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Graphique — Predict'IF</title>
+        <title>Dashboard — Predict'IF</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="style.css">
@@ -13,13 +13,13 @@
         </nav>
 
         <div class="page-content">
-            <h1>Graphique</h1>
+            <h1>Dashboard</h1>
             <div class="placeholder">Les statistiques seront affichées ici.</div>
         </div>
 
         <script src="nav.js"></script>
         <script>
-            window.onload = chargerNav;
+            window.onload = function() { chargerNav(); chargerFooter(); };
         </script>
     </body>
 </html>

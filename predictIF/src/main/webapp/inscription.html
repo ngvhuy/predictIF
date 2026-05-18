@@ -58,7 +58,7 @@
 
         <script src="nav.js"></script>
         <script>
-            window.onload = chargerNav;
+            window.onload = function() { chargerNav(); chargerFooter(); };
 
             document.getElementById("formInscription").addEventListener("submit", function(e) {
                 e.preventDefault();

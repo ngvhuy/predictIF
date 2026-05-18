@@ -29,17 +29,17 @@
                 <label>Mot de passe</label>
                 <input type="password" id="password" name="password" placeholder="password123" required>
 
-                <button type="submit">Se connecter</button>
-            </div>
+                <div class="lien-bas">
+                    Pas de compte ? <a href="inscription.html">S'inscrire</a>
+                </div>
 
-            <div class="lien-bas">
-                Pas de compte ? <a href="inscription.html">S'inscrire</a>
+                <button type="submit">Se connecter</button>
             </div>
         </div>
 
         <script src="nav.js"></script>
         <script>
-            window.onload = chargerNav;
+            window.onload = function() { chargerNav(); chargerFooter(); };
 
             document.getElementById("formConnexion").addEventListener("submit", function(e) {
                 e.preventDefault();

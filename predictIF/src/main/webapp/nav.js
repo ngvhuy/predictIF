@@ -17,10 +17,27 @@ const NAV = {
         '<li><a href="mediums.html">Liste des médiums</a></li>',
         '<li><a href="maConsultation.html">Ma Consultation</a></li>',
         '<li><a href="carteClients.html">Carte Clients</a></li>',
-        '<li><a href="graphique.html">Graphique</a></li>',
+        '<li><a href="dashboard.html">Dashboard</a></li>',
         '<li><a href="#" class="deconnexion" id="btnDeconnexion">Déconnexion</a></li>'
     ]
 };
+
+function chargerFooter() {
+    const footer = document.createElement("footer");
+    footer.innerHTML =
+        '<div class="footer-main">'
+      +   '<div class="footer-bloc">'
+      +     '<h3>Predict\'IF</h3>'
+      +     '<p>Insa Lyon<br>31 avenue Jean Capelle<br>69621 Villeurbanne</p>'
+      +   '</div>'
+      +   '<div class="footer-bloc">'
+      +     '<h3>Contact</h3>'
+      +     '<p>contact@predictif.fr<br>06 83 77 44 55</p>'
+      +   '</div>'
+      + '</div>'
+      + '<div class="footer-bas">© 2026 Predict\'IF – Projet INSA Lyon. Tous droits réservés.</div>';
+    document.body.appendChild(footer);
+}
 
 async function chargerNav() {
     try {

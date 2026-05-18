@@ -1,17 +1,64 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Profil Astral — Predict'IF</title>
+        <title>Mon Profil Astral — Predict'IF</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="style.css">
         <style>
-            .carte { background-color: #13102a; border: 1px solid #3a2a5e; border-radius: 6px; padding: 30px 24px; }
-            .carte .champ { display: flex; justify-content: space-between; border-bottom: 1px solid #2a1a4e; padding: 8px 0; }
-            .carte .champ:last-child { border-bottom: none; }
-            .champ-label { color: #a89070; font-size: 0.85rem; letter-spacing: 1px; }
-            .champ-valeur { color: #e8d5b7; font-size: 0.95rem; }
             .page-content { max-width: 600px; }
+
+            .profil-carte {
+                background-color: #13102a;
+                border: 1px solid #3a2a5e;
+                border-radius: 12px;
+                padding: 40px 36px;
+                position: relative;
+            }
+
+            .profil-carte h2 {
+                font-size: 1.6rem;
+                color: #c9a84c;
+                text-align: center;
+                margin-bottom: 30px;
+                padding-bottom: 20px;
+                border-bottom: 1px solid #2a1a4e;
+                font-style: italic;
+            }
+
+            .profil-ligne {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 18px 0;
+                border-bottom: 1px solid #1a1230;
+            }
+
+            .profil-ligne:last-child { border-bottom: none; }
+
+            .profil-label {
+                font-size: 0.9rem;
+                color: #a89070;
+            }
+
+            .profil-valeur {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                background-color: #1e1a3e;
+                border: 1px solid #3a2a5e;
+                border-radius: 6px;
+                padding: 8px 18px;
+                font-size: 0.95rem;
+                color: #e8d5b7;
+                min-width: 160px;
+                justify-content: center;
+            }
+
+            .profil-valeur.vide {
+                color: #4a3a5a;
+                font-style: italic;
+            }
         </style>
     </head>
     <body>
@@ -21,18 +68,63 @@
         </nav>
 
         <div class="page-content">
-            <h1>Profil Astral</h1>
-            <div class="carte" id="profil-contenu">
-                <div class="champ"><span class="champ-label">Chargement...</span></div>
+            <div class="profil-carte">
+                <h2>Mon Profil Astral</h2>
+
+                <div class="profil-ligne">
+                    <span class="profil-label">Signe du zodiaque :</span>
+                    <span class="profil-valeur" id="val-zodiac"><span>—</span></span>
+                </div>
+                <div class="profil-ligne">
+                    <span class="profil-label">Signe astrologique chinois :</span>
+                    <span class="profil-valeur" id="val-chinois"><span>—</span></span>
+                </div>
+                <div class="profil-ligne">
+                    <span class="profil-label">Couleur porte-bonheur :</span>
+                    <span class="profil-valeur" id="val-couleur"><span>—</span></span>
+                </div>
+                <div class="profil-ligne">
+                    <span class="profil-label">Animal totem :</span>
+                    <span class="profil-valeur" id="val-animal"><span>—</span></span>
+                </div>
             </div>
         </div>
 
         <script src="nav.js"></script>
         <script>
+            const ICONES = {
+                zodiac:  "✨",
+                chinois: "🐉",
+                couleur: "🟢",
+                animal:  "🦉"
+            };
+
+            function remplir(id, valeur, icone) {
+                const el = document.getElementById(id);
+                if (valeur) {
+                    el.innerHTML = '<span>' + icone + '</span><span>' + valeur + '</span>';
+                } else {
+                    el.classList.add("vide");
+                    el.innerHTML = "Non renseigné";
+                }
+            }
+
+            async function chargerProfil() {
+                try {
+                    const res = await fetch("/predictIF/ActionServlet?todo=profil-astral");
+                    const data = await res.json();
+                    if (data.erreur) return;
+                    remplir("val-zodiac",  data.zodiac,       ICONES.zodiac);
+                    remplir("val-chinois", data.signeChinois, ICONES.chinois);
+                    remplir("val-couleur", data.couleur,      ICONES.couleur);
+                    remplir("val-animal",  data.animal,       ICONES.animal);
+                } catch(e) {}
+            }
+
             window.onload = function() {
                 chargerNav();
-                document.getElementById("profil-contenu").innerHTML =
-                    "<div class='champ'><span class='champ-label'>Profil astral</span><span class='champ-valeur'>À venir</span></div>";
+                chargerFooter();
+                chargerProfil();
             };
         </script>
     </body>

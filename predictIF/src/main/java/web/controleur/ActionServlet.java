@@ -15,11 +15,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.json.Json;
 import jakarta.servlet.http.HttpSession;
 import web.modele.Action;
+import web.modele.CarteClientsAction;
 import web.modele.Connexion;
+import web.modele.ConsulterHistoriqueClient;
 import web.modele.ConsulterListeDemandesAction;
 import web.modele.ConsulterListeMediums;
+import web.modele.ConsulterProfilAstral;
+import web.vue.CarteClientsSerialisation;
+import web.vue.HistoriqueClientSerialisation;
 import web.vue.ListeMediumsSerialisation;
 import web.vue.pageConnexion;
+import web.vue.ProfilAstralSerialisation;
 import web.vue.Serialisation;
 
 /**
@@ -55,6 +61,24 @@ public class ActionServlet extends HttpServlet {
                 actionMedium.execute(request);
                 Serialisation serialisation = new ListeMediumsSerialisation();
                 serialisation.appliquer(request, response);
+                break;
+            case "profil-astral":
+                Action actionProfil = new ConsulterProfilAstral();
+                actionProfil.execute(request);
+                Serialisation serialisationProfil = new ProfilAstralSerialisation();
+                serialisationProfil.appliquer(request, response);
+                break;
+            case "carte-clients":
+                Action actionCarte = new CarteClientsAction();
+                actionCarte.execute(request);
+                Serialisation serialisationCarte = new CarteClientsSerialisation();
+                serialisationCarte.appliquer(request, response);
+                break;
+            case "historique-client":
+                Action actionHistorique = new ConsulterHistoriqueClient();
+                actionHistorique.execute(request);
+                Serialisation serialisationHistorique = new HistoriqueClientSerialisation();
+                serialisationHistorique.appliquer(request, response);
                 break;
             case "connexion":
                 Action actionConnexion = new Connexion();

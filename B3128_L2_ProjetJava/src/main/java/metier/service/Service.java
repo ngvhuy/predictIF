@@ -426,6 +426,22 @@ public class Service {
         return consultationsMedium;
     }
     
+    public List<Consultation> getConsultationsClient(Long idClient) {
+        List<Consultation> consultations = new ArrayList<>();
+        try {
+            JpaUtil.creerContextePersistance();
+            Client client = ClientDao.findById(idClient);
+            if (client != null) {
+                consultations = client.getListeConsultations();
+            }
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        } finally {
+            JpaUtil.fermerContextePersistance();
+        }
+        return consultations;
+    }
+
     public List<Client> getAllClients() {
         List<Client> clients = new ArrayList<>();
         System.out.println("metier.service.Service.getAllClients()");

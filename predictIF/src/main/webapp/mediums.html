@@ -98,6 +98,9 @@
 
             async function listerMediums() {
                 try {
+                    const profil = await getProfil();
+                    const estClient = profil === "client";
+
                     const response = await fetch("/predictIF/ActionServlet?todo=consulter-liste-mediums");
                     const mediums = await response.json();
                     const ul = document.getElementById("liste-mediums");
@@ -118,7 +121,9 @@
                         details.className = "medium-details";
                         details.innerHTML =
                             '<div class="medium-presentation">"' + m.presentation + '"</div>'
-                          + '<button class="btn-reserver">Réserver</button>';
+                          + (estClient
+                                ? '<button class="btn-reserver" data-id="' + m.id + '">Réserver</button>'
+                                : '');
 
                         li.addEventListener("click", function() {
                             const estOuvert = li.classList.contains("ouvert");

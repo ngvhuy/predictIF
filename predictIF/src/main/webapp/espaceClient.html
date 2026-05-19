@@ -5,6 +5,79 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="style.css">
+        <style>
+            h1 { text-transform: uppercase; letter-spacing: 6px; }
+
+            .liste { gap: 12px; }
+
+            .liste li {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 16px 20px;
+                cursor: pointer;
+                transition: border-color 0.2s;
+            }
+
+            .liste li.ouvert { border-color: #c9a84c; }
+
+            .avatar {
+                width: 42px;
+                height: 42px;
+                border-radius: 50%;
+                background-color: #3a1a6e;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+
+            .avatar svg { width: 24px; height: 24px; fill: #c9a84c; }
+
+            .medium-info { flex: 1; display: flex; align-items: center; gap: 12px; }
+
+            .medium-nom { font-size: 1rem; color: #e8d5b7; font-weight: bold; }
+
+            .separateur { color: #3a2a5e; font-size: 1.2rem; }
+
+            .medium-genre { font-size: 0.9rem; color: #a89070; }
+
+            .chevron { color: #c9a84c; font-size: 1.2rem; margin-left: auto; transition: transform 0.2s; }
+            .liste li.ouvert .chevron { transform: rotate(90deg); }
+
+            .medium-details {
+                display: none;
+                padding: 14px 20px 20px 78px;
+                border-top: 1px solid #2a1a4e;
+                background-color: #0f0d22;
+            }
+
+            .liste li.ouvert + .medium-details { display: block; }
+
+            .medium-presentation {
+                font-size: 0.95rem;
+                color: #a89070;
+                font-style: italic;
+                margin-bottom: 16px;
+            }
+
+            .btn-reserver {
+                display: inline-block;
+                padding: 8px 20px;
+                border: 1px solid #c9a84c;
+                color: #c9a84c;
+                font-family: Georgia, serif;
+                font-size: 0.85rem;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                cursor: pointer;
+                background: transparent;
+                width: auto;
+                margin-top: 0;
+            }
+
+            .btn-reserver:hover { background-color: #c9a84c; color: #0d0d1a; }
+        </style>
     </head>
     <body>
         <nav>
@@ -14,12 +87,55 @@
 
         <div class="page-content">
             <h1>Espace Client</h1>
-            <p class="sous-titre">Bienvenue sur votre espace personnel.</p>
+            <p class="sous-titre">Bienvenue ! Choisissez un médium pour réserver une consultation.</p>
+
+            <ul class="liste" id="liste-mediums">
+                <li>Chargement...</li>
+            </ul>
         </div>
 
         <script src="nav.js"></script>
         <script>
-            window.onload = function() { chargerNav(); chargerFooter(); };
+            const AVATAR_SVG = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>';
+
+            async function listerMediums() {
+                try {
+                    const response = await fetch("/predictIF/ActionServlet?todo=consulter-liste-mediums");
+                    const mediums = await response.json();
+                    const ul = document.getElementById("liste-mediums");
+                    ul.innerHTML = "";
+
+                    mediums.forEach(function(m) {
+                        const li = document.createElement("li");
+                        li.innerHTML =
+                            '<div class="avatar">' + AVATAR_SVG + '</div>'
+                          + '<div class="medium-info">'
+                          +   '<span class="medium-nom">' + m.denomination + '</span>'
+                          +   '<span class="separateur">|</span>'
+                          +   '<span class="medium-genre">' + m.genre + '</span>'
+                          + '</div>'
+                          + '<span class="chevron">›</span>';
+
+                        const details = document.createElement("div");
+                        details.className = "medium-details";
+                        details.innerHTML =
+                            '<div class="medium-presentation">"' + m.presentation + '"</div>'
+                          + '<button class="btn-reserver" data-id="' + m.id + '">Réserver</button>';
+
+                        li.addEventListener("click", function() {
+                            const estOuvert = li.classList.contains("ouvert");
+                            document.querySelectorAll("#liste-mediums li.ouvert").forEach(el => el.classList.remove("ouvert"));
+                            if (!estOuvert) li.classList.add("ouvert");
+                        });
+
+                        ul.appendChild(li);
+                        ul.appendChild(details);
+                    });
+                } catch (e) {
+                    document.getElementById("liste-mediums").innerHTML = "<li>Impossible de charger les médiums.</li>";
+                }
+            }
+            window.onload = function() { chargerNav(); chargerFooter(); listerMediums(); };
         </script>
     </body>
 </html>

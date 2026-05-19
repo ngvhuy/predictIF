@@ -22,12 +22,16 @@ import web.modele.ConsulterListeDemandesAction;
 import web.modele.ConsulterListeMediums;
 import web.modele.ConsulterProfilAstral;
 import web.modele.Inscription;
+import web.modele.ChargerMaConsultationAction;
+import web.modele.DemarrerConsultationAction;
+import web.modele.TerminerConsultationAction;
 import web.vue.CarteClientsSerialisation;
 import web.vue.HistoriqueClientSerialisation;
 import web.vue.ListeMediumsSerialisation;
 import web.vue.pageConnexion;
 import web.vue.pageInscription;
 import web.vue.ProfilAstralSerialisation;
+import web.vue.MaConsultationSerialisation;
 import web.vue.Serialisation;
 
 /**
@@ -113,6 +117,30 @@ public class ActionServlet extends HttpServlet {
                 PrintWriter pwLogout = response.getWriter();
                 pwLogout.write("{\"succes\":true}");
                 pwLogout.close();
+                break;
+            case "charger-ma-consultation":
+                Action actionMaConsultation = new ChargerMaConsultationAction();
+                actionMaConsultation.execute(request);
+                Serialisation serialisationMaConsultation = new MaConsultationSerialisation();
+                serialisationMaConsultation.appliquer(request, response);
+                break;
+            case "demarrer-consultation":
+                Action actionDemarrer = new DemarrerConsultationAction();
+                actionDemarrer.execute(request);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                PrintWriter pwDemarrer = response.getWriter();
+                pwDemarrer.write("{\"succes\":true}");
+                pwDemarrer.close();
+                break;
+            case "terminer-consultation":
+                Action actionTerminer = new TerminerConsultationAction();
+                actionTerminer.execute(request);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                PrintWriter pwTerminer = response.getWriter();
+                pwTerminer.write("{\"succes\":true}");
+                pwTerminer.close();
                 break;
             default:
                 

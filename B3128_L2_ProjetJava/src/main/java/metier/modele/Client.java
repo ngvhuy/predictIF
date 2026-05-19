@@ -147,6 +147,14 @@ public class Client {
         return prenom;
     }
 
+    public Float  getAdresseLongitude() {
+        return adresseLongitude;
+    }
+
+    public Float getAdresseLatitude() {
+        return adresseLatitude;
+    }
+
     @Override
     public String toString() {
         return "Client{" + "id=" + id + ", mail=" + mail + ", nom=" + nom + ", prenom=" + prenom + ", dateDeNaissance=" + dateDeNaissance + ", adressePostal=" + adressePostal + ", adresseLongitude=" + adresseLongitude+ ", adresseLatitude=" + adresseLatitude + ", numeroTelephone=" + numeroTelephone + ", motDePasse=" + motDePasse + ", profil=" + profil + '}';

@@ -21,10 +21,12 @@ import web.modele.ConsulterHistoriqueClient;
 import web.modele.ConsulterListeDemandesAction;
 import web.modele.ConsulterListeMediums;
 import web.modele.ConsulterProfilAstral;
+import web.modele.Inscription;
 import web.vue.CarteClientsSerialisation;
 import web.vue.HistoriqueClientSerialisation;
 import web.vue.ListeMediumsSerialisation;
 import web.vue.pageConnexion;
+import web.vue.pageInscription;
 import web.vue.ProfilAstralSerialisation;
 import web.vue.Serialisation;
 
@@ -85,6 +87,12 @@ public class ActionServlet extends HttpServlet {
                 actionConnexion.execute(request);
                 Serialisation serialisationConnexion = new pageConnexion();
                 serialisationConnexion.appliquer(request, response);
+                break;
+            case "inscription":
+                Action actionInscription = new Inscription();
+                actionInscription.execute(request);
+                Serialisation serialisationInscription = new pageInscription();
+                serialisationInscription.appliquer(request, response);
                 break;
             case "session":
                 HttpSession sess = request.getSession(false);

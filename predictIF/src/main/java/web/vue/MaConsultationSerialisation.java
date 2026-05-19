@@ -1,6 +1,7 @@
 package web.vue;
 
 import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObjectBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -52,6 +53,20 @@ public class MaConsultationSerialisation extends Serialisation {
                 builder.add("mediumGenre", consultation.getMedium().getGenre());
                 builder.add("mediumPresentation", consultation.getMedium().getPresentation());
             }
+            
+            // Historique des consultations entre le client et le médium
+            JsonArrayBuilder historiqueBuilder = Json.createArrayBuilder();
+            if (consultation.getClient() != null && consultation.getMedium() != null) {
+                for (Consultation c : consultation.getClient().getListeConsultations()) {
+                    if (c.getMedium().getId().equals(consultation.getMedium().getId()) && !c.getId().equals(consultation.getId())) {
+                        JsonObjectBuilder histObj = Json.createObjectBuilder();
+                        histObj.add("date", c.getDate() != null ? c.getDate().toString() : "");
+                        histObj.add("commentaire", c.getCommentaire() != null ? c.getCommentaire() : "Aucun commentaire");
+                        historiqueBuilder.add(histObj);
+                    }
+                }
+            }
+            builder.add("historique", historiqueBuilder);
         } else {
             builder.add("id", 0);
             builder.add("message", "Aucune consultation en cours");

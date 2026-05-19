@@ -73,32 +73,30 @@
                 min-width: 100px;
             }
             
-            .niveau-buttons {
-                display: flex;
-                gap: 5px;
+            .slider {
+                flex: 1;
+                -webkit-appearance: none;
+                height: 8px;
+                border-radius: 5px;  
+                background: #ddd;
+                outline: none;
             }
             
-            .niveau-btn {
-                width: 40px;
-                height: 40px;
-                padding: 0;
-                border: 2px solid #ddd;
-                background-color: white;
+            .slider::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%; 
+                background: #9b59b6;
                 cursor: pointer;
-                border-radius: 4px;
+            }
+            
+            .niveau-valeur {
                 font-weight: bold;
-                transition: all 0.3s;
-            }
-            
-            .niveau-btn:hover {
-                border-color: #9b59b6;
-                background-color: #f0e6f6;
-            }
-            
-            .niveau-btn.active {
-                background-color: #9b59b6;
-                color: white;
-                border-color: #9b59b6;
+                color: #9b59b6;
+                width: 20px;
+                text-align: center;
             }
             
             .btn-predire {
@@ -330,12 +328,15 @@
                         <div class="section">
                             <h2>📜 Historique</h2>
                             <div class="historique-list">
-                                <div class="historique-item">
-                                    <strong>Date:</strong> ${data.date || 'N/A'}<br>
-                                    <strong>Début:</strong> ${data.heureDebut || 'Pas commencée'}<br>
-                                    <strong>Fin:</strong> ${data.heureFin || 'En attente'}<br>
-                                    <strong>Commentaires:</strong> ${data.commentaire || 'Aucun'}
-                                </div>
+                                ${data.historique && data.historique.length > 0 ? 
+                                    data.historique.map(h => `
+                                        <div class="historique-item">
+                                            <strong>Date:</strong> ${h.date}<br>
+                                            <strong>Commentaire:</strong> ${h.commentaire}
+                                        </div>
+                                    `).join('') 
+                                    : '<div class="historique-item">Aucune consultation passée avec ce médium.</div>'
+                                }
                             </div>
                         </div>
 
@@ -345,30 +346,18 @@
                             <div class="outils-aide">
                                 <div class="niveau-control">
                                     <span class="niveau-label">❤️ Amour:</span>
-                                    <div class="niveau-buttons" id="niveaux-amour">
-                                        <button class="niveau-btn" data-value="1" onclick="setNiveau('amour', 1)">1</button>
-                                        <button class="niveau-btn" data-value="2" onclick="setNiveau('amour', 2)">2</button>
-                                        <button class="niveau-btn" data-value="3" onclick="setNiveau('amour', 3)">3</button>
-                                        <button class="niveau-btn" data-value="4" onclick="setNiveau('amour', 4)">4</button>
-                                    </div>
+                                    <input type="range" id="niveau-amour" class="slider" min="1" max="4" value="${data.niveauAmour || 1}" oninput="document.getElementById('val-amour').innerText = this.value" ${isCloturee ? 'disabled' : ''}>
+                                    <span class="niveau-valeur" id="val-amour">${data.niveauAmour || 1}</span>
                                 </div>
                                 <div class="niveau-control">
                                     <span class="niveau-label">💪 Santé:</span>
-                                    <div class="niveau-buttons" id="niveaux-sante">
-                                        <button class="niveau-btn" data-value="1" onclick="setNiveau('sante', 1)">1</button>
-                                        <button class="niveau-btn" data-value="2" onclick="setNiveau('sante', 2)">2</button>
-                                        <button class="niveau-btn" data-value="3" onclick="setNiveau('sante', 3)">3</button>
-                                        <button class="niveau-btn" data-value="4" onclick="setNiveau('sante', 4)">4</button>
-                                    </div>
+                                    <input type="range" id="niveau-sante" class="slider" min="1" max="4" value="${data.niveauSante || 1}" oninput="document.getElementById('val-sante').innerText = this.value" ${isCloturee ? 'disabled' : ''}>
+                                    <span class="niveau-valeur" id="val-sante">${data.niveauSante || 1}</span>
                                 </div>
                                 <div class="niveau-control">
                                     <span class="niveau-label">💼 Travail:</span>
-                                    <div class="niveau-buttons" id="niveaux-travail">
-                                        <button class="niveau-btn" data-value="1" onclick="setNiveau('travail', 1)">1</button>
-                                        <button class="niveau-btn" data-value="2" onclick="setNiveau('travail', 2)">2</button>
-                                        <button class="niveau-btn" data-value="3" onclick="setNiveau('travail', 3)">3</button>
-                                        <button class="niveau-btn" data-value="4" onclick="setNiveau('travail', 4)">4</button>
-                                    </div>
+                                    <input type="range" id="niveau-travail" class="slider" min="1" max="4" value="${data.niveauTravail || 1}" oninput="document.getElementById('val-travail').innerText = this.value" ${isCloturee ? 'disabled' : ''}>
+                                    <span class="niveau-valeur" id="val-travail">${data.niveauTravail || 1}</span>
                                 </div>
                                 <button class="btn-predire" onclick="genererPrediction()" ${isCloturee ? 'disabled' : ''}>🔮 Générer Prédiction</button>
                             </div>
@@ -401,48 +390,29 @@
                 `;
 
                 document.getElementById("consultation-content").innerHTML = html;
-                
-                // Restaurer les niveaux sélectionnés
-                if (data.niveauAmour) setNiveauUI('amour', data.niveauAmour);
-                if (data.niveauSante) setNiveauUI('sante', data.niveauSante);
-                if (data.niveauTravail) setNiveauUI('travail', data.niveauTravail);
-            }
-
-            function setNiveau(domaine, valeur) {
-                const btn = document.querySelector(`#niveaux-${domaine === 'amour' ? 'amour' : domaine === 'sante' ? 'sante' : 'travail'} .niveau-btn[data-value="${valeur}"]`);
-                if (btn) {
-                    document.querySelectorAll(`#niveaux-${domaine === 'amour' ? 'amour' : domaine === 'sante' ? 'sante' : 'travail'} .niveau-btn`).forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    
-                    if (domaine === 'amour') consultationData.niveauAmour = valeur;
-                    else if (domaine === 'sante') consultationData.niveauSante = valeur;
-                    else if (domaine === 'travail') consultationData.niveauTravail = valeur;
-                }
-            }
-
-            function setNiveauUI(domaine, valeur) {
-                const container = document.getElementById(`niveaux-${domaine}`);
-                if (container) {
-                    container.querySelectorAll('.niveau-btn').forEach(btn => btn.classList.remove('active'));
-                    const btn = container.querySelector(`[data-value="${valeur}"]`);
-                    if (btn) btn.classList.add('active');
-                }
             }
 
             function genererPrediction() {
-                const amour = consultationData.niveauAmour || 1;
-                const sante = consultationData.niveauSante || 1;
-                const travail = consultationData.niveauTravail || 1;
+                const amour = document.getElementById('niveau-amour').value;
+                const sante = document.getElementById('niveau-sante').value;
+                const travail = document.getElementById('niveau-travail').value;
                 
-                const predictions = [
-                    `Les astres indiquent une évolution positive en matière d'amour (niveau ${amour}), de santé (niveau ${sante}) et de carrière (niveau ${travail}). Votre chemin est guidé par les énergies cosmiques.`,
-                    `Une période de transformation vous attend. L'amour rayonne (${amour}/4), la santé s'améliore (${sante}/4) et les opportunités professionnelles émergent (${travail}/4).`,
-                    `Les esprits révèlent: vos relations amoureuses évoluent, votre bien-être s'affirme et votre carrière prend un nouvel essor. Les énergies vous sont favorables.`
-                ];
+                document.getElementById('prediction-display').textContent = "Chargement des visions astro-psychiques...";
                 
-                const prediction = predictions[Math.floor(Math.random() * predictions.length)];
-                document.getElementById('prediction-display').textContent = prediction;
-                consultationData.prediction = prediction;
+                fetch(`/predictIF/ActionServlet?todo=generer-prediction&amour=${amour}&sante=${sante}&travail=${travail}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.prediction) {
+                            document.getElementById('prediction-display').textContent = data.prediction;
+                            consultationData.prediction = data.prediction;
+                        }
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        const fallbackPrediction = `Les énergies perçues indiquent une aura positive (Amour : ${amour}/4, Santé : ${sante}/4, Travail : ${travail}/4). Concentrez-vous sur ce qui résonne en vous.`;
+                        document.getElementById('prediction-display').textContent = fallbackPrediction;
+                        consultationData.prediction = fallbackPrediction;
+                    });
             }
 
             function demarrerConsultation() {
@@ -460,9 +430,9 @@
                     todo: 'terminer-consultation',
                     commentaire: commentaires,
                     prediction: consultationData.prediction || '',
-                    niveauAmour: consultationData.niveauAmour || 0,
-                    niveauSante: consultationData.niveauSante || 0,
-                    niveauTravail: consultationData.niveauTravail || 0
+                    niveauAmour: document.getElementById('niveau-amour').value,
+                    niveauSante: document.getElementById('niveau-sante').value,
+                    niveauTravail: document.getElementById('niveau-travail').value
                 });
                 
                 fetch("/predictIF/ActionServlet", { 
@@ -481,4 +451,3 @@
         </script>
     </body>
 </html>
-

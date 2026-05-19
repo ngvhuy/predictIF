@@ -26,6 +26,7 @@ import web.modele.Inscription;
 import web.modele.ChargerMaConsultationAction;
 import web.modele.DemarrerConsultationAction;
 import web.modele.TerminerConsultationAction;
+import web.modele.GenererPredictionAction;
 import web.vue.CarteClientsSerialisation;
 import web.vue.DashboardSerialisation;
 import web.vue.HistoriqueClientSerialisation;
@@ -35,6 +36,7 @@ import web.vue.pageInscription;
 import web.vue.ProfilAstralSerialisation;
 import web.vue.MaConsultationSerialisation;
 import web.vue.Serialisation;
+import web.vue.GenererPredictionSerialisation;
 
 /**
  *
@@ -149,6 +151,12 @@ public class ActionServlet extends HttpServlet {
                 PrintWriter pwTerminer = response.getWriter();
                 pwTerminer.write("{\"succes\":true}");
                 pwTerminer.close();
+                break;
+            case "generer-prediction":
+                Action actionPrediction = new GenererPredictionAction();
+                actionPrediction.execute(request);
+                Serialisation serialisationPrediction = new GenererPredictionSerialisation();
+                serialisationPrediction.appliquer(request, response);
                 break;
             default:
                 

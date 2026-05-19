@@ -147,6 +147,10 @@
 
             const COULEURS_PIE = ['#c9a84c', '#5a3a8e', '#c060c0', '#2a1a4e', '#8a5a9a', '#e8a050'];
 
+            function pluraliserConsultation(nb) {
+                return nb + ' consultation' + (nb >= 2 ? 's' : '');
+            }
+
             function afficherTopMediums(mediums) {
                 const ul = document.getElementById("liste-top-mediums");
                 ul.innerHTML = "";
@@ -158,7 +162,8 @@
                     const li = document.createElement("li");
                     li.innerHTML =
                         '<div class="avatar-mini">' + AVATAR_SVG + '</div>'
-                      + '<span class="stat-label">' + m.denomination + '</span>';
+                      + '<span class="stat-label">' + m.denomination + '</span>'
+                      + '<span class="stat-value">' + pluraliserConsultation(m.nbConsultations) + '</span>';
                     ul.appendChild(li);
                 });
             }
@@ -174,7 +179,7 @@
                     const li = document.createElement("li");
                     li.innerHTML =
                         '<span class="stat-label">' + c.prenom + ' ' + c.nom + '</span>'
-                      + '<span class="stat-value">' + c.nbConsultations + ' consultations</span>';
+                      + '<span class="stat-value">' + pluraliserConsultation(c.nbConsultations) + '</span>';
                     ul.appendChild(li);
                 });
             }

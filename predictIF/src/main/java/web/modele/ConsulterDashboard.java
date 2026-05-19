@@ -23,12 +23,12 @@ public class ConsulterDashboard extends Action {
     @Override
     public void execute(HttpServletRequest request) {
         try {
-            List<Medium> topMediums = service.getTop5Medium();
+            Map<Medium, Integer> nbParMedium = service.getNbConsultationParMedium();
             Double moyenne = service.getNbConsultationMoyenneParMedium();
             List<Client> topClients = service.getTop5Client();
             Map<Employe, Integer> repartition = service.getNbConsultationParEmploye();
 
-            request.setAttribute("topMediums", topMediums);
+            request.setAttribute("nbParMedium", nbParMedium);
             request.setAttribute("moyenne", moyenne);
             request.setAttribute("topClients", topClients);
             request.setAttribute("repartition", repartition);

@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import metier.modele.Client;
@@ -28,16 +30,22 @@ public class DashboardSerialisation extends Serialisation {
             return;
         }
 
-        List<Medium> topMediums = (List<Medium>) request.getAttribute("topMediums");
+        Map<Medium, Integer> nbParMedium = (Map<Medium, Integer>) request.getAttribute("nbParMedium");
         Double moyenne = (Double) request.getAttribute("moyenne");
         List<Client> topClients = (List<Client>) request.getAttribute("topClients");
         Map<Employe, Integer> repartition = (Map<Employe, Integer>) request.getAttribute("repartition");
 
         JsonArrayBuilder topMediumsJson = Json.createArrayBuilder();
-        if (topMediums != null) {
-            for (Medium m : topMediums) {
+        if (nbParMedium != null) {
+            List<Map.Entry<Medium, Integer>> sorted = new ArrayList<>(nbParMedium.entrySet());
+            sorted.sort(Comparator.comparingInt((Map.Entry<Medium, Integer> e) -> e.getValue()).reversed());
+            int limite = Math.min(5, sorted.size());
+            for (int i = 0; i < limite; i++) {
+                Medium m = sorted.get(i).getKey();
+                Integer nb = sorted.get(i).getValue();
                 topMediumsJson.add(Json.createObjectBuilder()
                         .add("denomination", m.getDenomination() != null ? m.getDenomination() : "")
+                        .add("nbConsultations", nb != null ? nb : 0)
                 );
             }
         }

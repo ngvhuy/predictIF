@@ -17,12 +17,14 @@ import jakarta.servlet.http.HttpSession;
 import web.modele.Action;
 import web.modele.CarteClientsAction;
 import web.modele.Connexion;
+import web.modele.ConsulterDashboard;
 import web.modele.ConsulterHistoriqueClient;
 import web.modele.ConsulterListeDemandesAction;
 import web.modele.ConsulterListeMediums;
 import web.modele.ConsulterProfilAstral;
 import web.modele.Inscription;
 import web.vue.CarteClientsSerialisation;
+import web.vue.DashboardSerialisation;
 import web.vue.HistoriqueClientSerialisation;
 import web.vue.ListeMediumsSerialisation;
 import web.vue.pageConnexion;
@@ -93,6 +95,12 @@ public class ActionServlet extends HttpServlet {
                 actionInscription.execute(request);
                 Serialisation serialisationInscription = new pageInscription();
                 serialisationInscription.appliquer(request, response);
+                break;
+            case "dashboard":
+                Action actionDashboard = new ConsulterDashboard();
+                actionDashboard.execute(request);
+                Serialisation serialisationDashboard = new DashboardSerialisation();
+                serialisationDashboard.appliquer(request, response);
                 break;
             case "session":
                 HttpSession sess = request.getSession(false);

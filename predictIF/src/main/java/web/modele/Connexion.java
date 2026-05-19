@@ -43,6 +43,7 @@ public class Connexion extends Action {
         Employe employe = service.authentifierEmploye(mail, password);
         if (employe != null) {
             session.setAttribute("employeConnecte", employe);
+            session.setAttribute("idEmploye", employe.getId());
             session.setAttribute("profil", "employe");
             request.setAttribute("succes", true);
             request.setAttribute("redirection", "espaceEmploye.html");

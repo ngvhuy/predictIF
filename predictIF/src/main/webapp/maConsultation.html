@@ -1,453 +1,419 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Ma Consultation — Predict'IF</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="style.css">
-        <style>
-            .consultation-container {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 20px;
-                margin: 20px 0;
-            }
-            
-            .section {
-                border: 2px solid #ccc;
-                padding: 20px;
-                border-radius: 8px;
-                background-color: #f9f9f9;
-            }
-            
-            .section h2 {
-                margin-top: 0;
-                color: #333;
-                border-bottom: 2px solid #9b59b6;
-                padding-bottom: 10px;
-            }
-            
-            .info-row {
-                display: flex;
-                justify-content: space-between;
-                padding: 8px 0;
-                border-bottom: 1px solid #eee;
-            }
-            
-            .info-label {
-                font-weight: bold;
-                color: #555;
-            }
-            
-            .info-value {
-                color: #333;
-            }
-            
-            .historique-list {
-                max-height: 300px;
-                overflow-y: auto;
-            }
-            
-            .historique-item {
-                padding: 10px;
-                margin: 5px 0;
-                background-color: white;
-                border-left: 4px solid #9b59b6;
-                border-radius: 4px;
-            }
-            
-            .outils-aide {
-                display: flex;
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .niveau-control {
-                display: flex;
-                align-items: center;
-                gap: 15px;
-            }
-            
-            .niveau-label {
-                font-weight: bold;
-                min-width: 100px;
-            }
-            
-            .slider {
-                flex: 1;
-                -webkit-appearance: none;
-                height: 8px;
-                border-radius: 5px;  
-                background: #ddd;
-                outline: none;
-            }
-            
-            .slider::-webkit-slider-thumb {
-                -webkit-appearance: none;
-                appearance: none;
-                width: 20px;
-                height: 20px;
-                border-radius: 50%; 
-                background: #9b59b6;
-                cursor: pointer;
-            }
-            
-            .niveau-valeur {
-                font-weight: bold;
-                color: #9b59b6;
-                width: 20px;
-                text-align: center;
-            }
-            
-            .btn-predire {
-                background-color: #9b59b6;
-                color: white;
-                padding: 12px 20px;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 16px;
-                font-weight: bold;
-                transition: background-color 0.3s;
-            }
-            
-            .btn-predire:hover {
-                background-color: #8e44ad;
-            }
-            
-            .prediction-zone {
-                min-height: 100px;
-                padding: 15px;
-                background-color: white;
-                border-radius: 4px;
-                border: 1px solid #ddd;
-                word-wrap: break-word;
-            }
-            
-            textarea {
-                width: 100%;
-                min-height: 120px;
-                padding: 10px;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-                font-family: Arial, sans-serif;
-                resize: vertical;
-            }
-            
-            .actions {
-                display: flex;
-                gap: 15px;
-                margin-top: 20px;
-                justify-content: space-between;
-            }
-            
-            .btn-action {
-                padding: 12px 20px;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 16px;
-                font-weight: bold;
-                transition: all 0.3s;
-            }
-            
-            .btn-pret {
-                background-color: #27ae60;
-                color: white;
-                flex: 1;
-            }
-            
-            .btn-pret:hover {
-                background-color: #229954;
-            }
-            
-            .btn-terminer {
-                background-color: #e74c3c;
-                color: white;
-                flex: 1;
-            }
-            
-            .btn-terminer:hover {
-                background-color: #c0392b;
-            }
-            
-            .btn-action:disabled {
-                opacity: 0.5;
-                cursor: not-allowed;
-            }
-            
-            .status-badge {
-                display: inline-block;
-                padding: 5px 10px;
-                border-radius: 20px;
-                font-weight: bold;
-                font-size: 12px;
-                margin-top: 10px;
-            }
-            
-            .status-reservee {
-                background-color: #f39c12;
-                color: white;
-            }
-            
-            .status-active {
-                background-color: #27ae60;
-                color: white;
-            }
-            
-            .status-cloturee {
-                background-color: #95a5a6;
-                color: white;
-            }
-            
-            .full-width {
-                grid-column: 1 / -1;
-            }
-            
-            .no-consultation {
-                text-align: center;
-                padding: 50px;
-                color: #999;
-            }
-        </style>
-    </head>
-    <body>
-        <nav>
-            <a class="nav-logo" href="index.html">Predict'IF</a>
-            <ul id="nav-liens"></ul>
-        </nav>
+<html lang="fr">
+<head>
+    <title>Ma Consultation — Predict'IF</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .consult-page {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
 
-        <div class="page-content">
+        .consult-page h1 {
+            text-align: center;
+            color: #c9a84c;
+            font-size: 1.8rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        .btn-pill {
+            display: block;
+            margin: 0 auto 30px;
+            padding: 14px 40px;
+            background-color: #c9a84c;
+            color: #0d0d1a;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-pill:hover:not(:disabled) {
+            background-color: #e0c060;
+        }
+
+        .btn-pill:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .consult-card {
+            background-color: #13102a;
+            border: 1px solid #3a2a5e;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .consult-card h2 {
+            font-size: 0.85rem;
+            color: #c9a84c;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin: 0 0 18px 0;
+            font-weight: bold;
+        }
+
+        .type-badge {
+            display: inline-block;
+            background-color: #9b59b6;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #2a1a4e;
+            font-size: 0.95rem;
+        }
+
+        .info-row:last-child { border-bottom: none; }
+
+        .info-label { color: #888; }
+
+        .info-value {
+            color: #e8d5b7;
+            text-align: right;
+            max-width: 60%;
+        }
+
+        .hist-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .hist-table thead tr {
+            border-bottom: 1px solid #c9a84c;
+        }
+
+        .hist-table th {
+            color: #c9a84c;
+            text-align: left;
+            padding: 6px 10px 10px;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        .hist-table td {
+            color: #e8d5b7;
+            padding: 10px;
+            border-bottom: 1px solid #2a1a4e;
+            vertical-align: top;
+        }
+
+        .hist-table td:first-child {
+            white-space: nowrap;
+            width: 130px;
+        }
+
+        .no-hist {
+            color: #555;
+            font-style: italic;
+        }
+
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .slider-label {
+            color: #e8d5b7;
+            min-width: 60px;
+            font-size: 0.95rem;
+        }
+
+        .slider-wrap { flex: 1; }
+
+        .slider {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 6px;
+            background: #2a1a4e;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #c9a84c;
+            cursor: pointer;
+        }
+
+        .slider-ticks {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 2px;
+            margin-top: 4px;
+        }
+
+        .slider-ticks span { color: #555; font-size: 0.7rem; }
+
+        .btn-predire {
+            background-color: #c9a84c;
+            color: #0d0d1a;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 18px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 14px;
+            letter-spacing: 1px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-predire:hover { background-color: #e0c060; }
+
+        .prediction-textarea,
+        .commentaire-textarea {
+            width: 100%;
+            min-height: 110px;
+            background-color: #0d0d1a;
+            border: 1px solid #3a2a5e;
+            border-radius: 4px;
+            color: #e8d5b7;
+            font-family: Georgia, serif;
+            font-size: 0.9rem;
+            padding: 12px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        .prediction-textarea::placeholder,
+        .commentaire-textarea::placeholder { color: #444; }
+
+        .no-consult {
+            text-align: center;
+            color: #555;
+            font-style: italic;
+            padding: 60px 0;
+        }
+
+        /* Section cachée jusqu'au clic "Je me sens prêt" */
+        #section-travail { display: none; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a class="nav-logo" href="index.html">Predict'IF</a>
+        <ul id="nav-liens"></ul>
+    </nav>
+
+    <div class="page-content">
+        <div class="consult-page">
             <h1>Ma Consultation</h1>
             <div id="consultation-content">
-                <div class="no-consultation">Chargement de la consultation...</div>
+                <div class="no-consult">Chargement...</div>
             </div>
         </div>
+    </div>
 
-        <script src="nav.js"></script>
-        <script>
-            let consultationData = null;
-            let statut = null;
+    <script src="nav.js"></script>
+    <script>
+        let consultationData = null;
 
-            window.onload = function() {
-                chargerNav();
-                chargerFooter();
-                chargerConsultation();
-            };
+        window.onload = function () {
+            chargerNav();
+            chargerFooter();
+            chargerConsultation();
+        };
 
-            function chargerConsultation() {
-                fetch("/predictIF/ActionServlet?todo=charger-ma-consultation")
-                    .then(r => r.json())
-                    .then(data => {
-                        consultationData = data;
-                        statut = data.statut;
-                        afficherConsultation(data);
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        document.getElementById("consultation-content").innerHTML = 
-                            '<div class="no-consultation">Erreur lors du chargement de la consultation</div>';
-                    });
-            }
-
-            function afficherConsultation(data) {
-                if (!data.id || data.id === 0) {
-                    document.getElementById("consultation-content").innerHTML = 
-                        '<div class="no-consultation">Aucune consultation en cours pour le moment.</div>';
-                    return;
-                }
-
-                const isActive = data.statut === "ACTIVE";
-                const isCloturee = data.statut === "CLOTUREE";
-
-                let html = `
-                    <div class="consultation-container">
-                        <!-- Section Medium -->
-                        <div class="section">
-                            <h2>📿 Médium</h2>
-                            <div class="info-row">
-                                <span class="info-label">Dénomination:</span>
-                                <span class="info-value">${data.mediumDenomination || '-'}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Genre:</span>
-                                <span class="info-value">${data.mediumGenre || '-'}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Présentation:</span>
-                                <span class="info-value">${data.mediumPresentation || '-'}</span>
-                            </div>
-                        </div>
-
-                        <!-- Section Client -->
-                        <div class="section">
-                            <h2>👤 Client</h2>
-                            <div class="info-row">
-                                <span class="info-label">Nom:</span>
-                                <span class="info-value">${data.clientNom || '-'} ${data.clientPrenom || ''}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Téléphone:</span>
-                                <span class="info-value">${data.clientTelephone || '-'}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Email:</span>
-                                <span class="info-value">${data.clientMail || '-'}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Naissance:</span>
-                                <span class="info-value">${data.clientDateNaissance || '-'}</span>
-                            </div>
-                            <div class="status-badge status-${data.statut.toLowerCase()}">
-                                ${data.statut}
-                            </div>
-                        </div>
-
-                        <!-- Section Profil Astral -->
-                        <div class="section">
-                            <h2>✨ Profil Astral</h2>
-                            <div class="info-row">
-                                <span class="info-label">Zodiaque:</span>
-                                <span class="info-value">${data.profilZodiac || '-'}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Signe Chinois:</span>
-                                <span class="info-value">${data.profilSigneChinois || '-'}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Couleur:</span>
-                                <span class="info-value">${data.profilCouleur || '-'}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Animal:</span>
-                                <span class="info-value">${data.profilAnimal || '-'}</span>
-                            </div>
-                        </div>
-
-                        <!-- Section Historique -->
-                        <div class="section">
-                            <h2>📜 Historique</h2>
-                            <div class="historique-list">
-                                ${data.historique && data.historique.length > 0 ? 
-                                    data.historique.map(h => `
-                                        <div class="historique-item">
-                                            <strong>Date:</strong> ${h.date}<br>
-                                            <strong>Commentaire:</strong> ${h.commentaire}
-                                        </div>
-                                    `).join('') 
-                                    : '<div class="historique-item">Aucune consultation passée avec ce médium.</div>'
-                                }
-                            </div>
-                        </div>
-
-                        <!-- Section Outils d'Aide -->
-                        <div class="section full-width">
-                            <h2>🔮 Outils d'Aide</h2>
-                            <div class="outils-aide">
-                                <div class="niveau-control">
-                                    <span class="niveau-label">❤️ Amour:</span>
-                                    <input type="range" id="niveau-amour" class="slider" min="1" max="4" value="${data.niveauAmour || 1}" oninput="document.getElementById('val-amour').innerText = this.value" ${isCloturee ? 'disabled' : ''}>
-                                    <span class="niveau-valeur" id="val-amour">${data.niveauAmour || 1}</span>
-                                </div>
-                                <div class="niveau-control">
-                                    <span class="niveau-label">💪 Santé:</span>
-                                    <input type="range" id="niveau-sante" class="slider" min="1" max="4" value="${data.niveauSante || 1}" oninput="document.getElementById('val-sante').innerText = this.value" ${isCloturee ? 'disabled' : ''}>
-                                    <span class="niveau-valeur" id="val-sante">${data.niveauSante || 1}</span>
-                                </div>
-                                <div class="niveau-control">
-                                    <span class="niveau-label">💼 Travail:</span>
-                                    <input type="range" id="niveau-travail" class="slider" min="1" max="4" value="${data.niveauTravail || 1}" oninput="document.getElementById('val-travail').innerText = this.value" ${isCloturee ? 'disabled' : ''}>
-                                    <span class="niveau-valeur" id="val-travail">${data.niveauTravail || 1}</span>
-                                </div>
-                                <button class="btn-predire" onclick="genererPrediction()" ${isCloturee ? 'disabled' : ''}>🔮 Générer Prédiction</button>
-                            </div>
-                        </div>
-
-                        <!-- Section Prédiction -->
-                        <div class="section full-width">
-                            <h2>🌟 Prédiction</h2>
-                            <div class="prediction-zone" id="prediction-display">
-                                ${data.prediction || 'Générez une prédiction en cliquant sur le bouton ci-dessus.'}
-                            </div>
-                        </div>
-
-                        <!-- Section Commentaires -->
-                        <div class="section full-width">
-                            <h2>📝 Commentaires Finaux</h2>
-                            <textarea id="commentaires" placeholder="Entrez les commentaires finaux de la consultation..." ${isCloturee ? 'readonly' : ''}>${data.commentaire || ''}</textarea>
-                        </div>
-
-                        <!-- Boutons d'Action -->
-                        <div class="actions full-width">
-                            <button class="btn-action btn-pret" onclick="demarrerConsultation()" ${isActive || isCloturee ? 'disabled' : ''}>
-                                ✅ Je me sens prêt
-                            </button>
-                            <button class="btn-action btn-terminer" onclick="terminerConsultation()" ${!isActive || isCloturee ? 'disabled' : ''}>
-                                ✋ Fin de Consultation
-                            </button>
-                        </div>
-                    </div>
-                `;
-
-                document.getElementById("consultation-content").innerHTML = html;
-            }
-
-            function genererPrediction() {
-                const amour = document.getElementById('niveau-amour').value;
-                const sante = document.getElementById('niveau-sante').value;
-                const travail = document.getElementById('niveau-travail').value;
-                
-                document.getElementById('prediction-display').textContent = "Chargement des visions astro-psychiques...";
-                
-                fetch(`/predictIF/ActionServlet?todo=generer-prediction&amour=${amour}&sante=${sante}&travail=${travail}`)
-                    .then(r => r.json())
-                    .then(data => {
-                        if (data.prediction) {
-                            document.getElementById('prediction-display').textContent = data.prediction;
-                            consultationData.prediction = data.prediction;
-                        }
-                    })
-                    .catch(e => {
-                        console.log(e);
-                        const fallbackPrediction = `Les énergies perçues indiquent une aura positive (Amour : ${amour}/4, Santé : ${sante}/4, Travail : ${travail}/4). Concentrez-vous sur ce qui résonne en vous.`;
-                        document.getElementById('prediction-display').textContent = fallbackPrediction;
-                        consultationData.prediction = fallbackPrediction;
-                    });
-            }
-
-            function demarrerConsultation() {
-                fetch("/predictIF/ActionServlet?todo=demarrer-consultation", { method: 'POST' })
-                    .then(() => {
-                        alert('Consultation démarrée!');
-                        chargerConsultation();
-                    })
-                    .catch(err => alert('Erreur: ' + err));
-            }
-
-            function terminerConsultation() {
-                const commentaires = document.getElementById('commentaires').value;
-                const params = new URLSearchParams({
-                    todo: 'terminer-consultation',
-                    commentaire: commentaires,
-                    prediction: consultationData.prediction || '',
-                    niveauAmour: document.getElementById('niveau-amour').value,
-                    niveauSante: document.getElementById('niveau-sante').value,
-                    niveauTravail: document.getElementById('niveau-travail').value
-                });
-                
-                fetch("/predictIF/ActionServlet", { 
-                    method: 'POST',
-                    body: params,
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
+        function chargerConsultation() {
+            fetch("/predictIF/ActionServlet?todo=charger-ma-consultation")
+                .then(r => r.json())
+                .then(data => {
+                    consultationData = data;
+                    afficherConsultation(data);
                 })
-                    .then(() => {
-                        alert('Consultation clôturée!');
-                        chargerConsultation();
-                    })
-                    .catch(err => alert('Erreur: ' + err));
+                .catch(() => {
+                    document.getElementById("consultation-content").innerHTML =
+                        '<div class="no-consult">Erreur lors du chargement.</div>';
+                });
+        }
+
+        function afficherConsultation(data) {
+            if (!data.id || data.id === 0) {
+                document.getElementById("consultation-content").innerHTML =
+                    '<div class="no-consult">Aucune consultation en cours pour le moment.</div>';
+                return;
             }
-        </script>
-    </body>
+
+            const clientNom = ((data.clientPrenom || '') + ' ' + (data.clientNom || '')).trim();
+            const mediumNom = data.mediumDenomination || '-';
+            const estPret = data.estPret === true;
+
+            const historiqueRows = data.historique && data.historique.length > 0
+                ? data.historique.map(h => `
+                    <tr>
+                        <td>${h.date || '-'}</td>
+                        <td>${h.commentaire || '-'}</td>
+                    </tr>`).join('')
+                : `<tr><td colspan="2" class="no-hist">Aucune consultation antérieure avec ce médium.</td></tr>`;
+
+            document.getElementById("consultation-content").innerHTML = `
+
+                <!-- Bouton Prêt -->
+                <button class="btn-pill" id="btn-pret" onclick="demarrerConsultation()" ${estPret ? 'disabled' : ''}>
+                    JE ME SENS PRÊTE
+                </button>
+
+                <!-- Medium -->
+                <div class="consult-card">
+                    <h2>Médium : <span class="type-badge">${data.mediumGenre || ''}</span></h2>
+                    <div class="info-row">
+                        <span class="info-label">Dénomination :</span>
+                        <span class="info-value">${data.mediumDenomination || '-'}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Genre :</span>
+                        <span class="info-value">${data.mediumGenre || '-'}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Présentation :</span>
+                        <span class="info-value">${data.mediumPresentation || '-'}</span>
+                    </div>
+                </div>
+
+                <!-- Profil Astral -->
+                <div class="consult-card">
+                    <h2>Profil Astral de ${clientNom}</h2>
+                    <div class="info-row">
+                        <span class="info-label">Zodiaque :</span>
+                        <span class="info-value">🔵 ${data.profilZodiac || '-'}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Chinois :</span>
+                        <span class="info-value">🐲 ${data.profilSigneChinois || '-'}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Couleur :</span>
+                        <span class="info-value">${data.profilCouleur || '-'}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Animal :</span>
+                        <span class="info-value">${data.profilAnimal || '-'}</span>
+                    </div>
+                </div>
+
+                <!-- Historique -->
+                <div class="consult-card">
+                    <h2>Historique des consultations de ${clientNom} avec ${mediumNom}</h2>
+                    <table class="hist-table">
+                        <thead><tr><th>Date</th><th>Commentaire</th></tr></thead>
+                        <tbody>${historiqueRows}</tbody>
+                    </table>
+                </div>
+
+                <!-- Section travail : cachée jusqu'au clic "Je me sens prêt" -->
+                <div id="section-travail" style="display: ${estPret ? 'block' : 'none'}">
+
+                    <!-- Outils d'Aide -->
+                    <div class="consult-card">
+                        <h2>Outils d'Aide</h2>
+                        <div class="slider-row">
+                            <span class="slider-label">Amour</span>
+                            <div class="slider-wrap">
+                                <input type="range" id="niveau-amour" class="slider" min="1" max="4" value="1">
+                                <div class="slider-ticks"><span>1</span><span>2</span><span>3</span><span>4</span></div>
+                            </div>
+                        </div>
+                        <div class="slider-row">
+                            <span class="slider-label">Santé</span>
+                            <div class="slider-wrap">
+                                <input type="range" id="niveau-sante" class="slider" min="1" max="4" value="1">
+                                <div class="slider-ticks"><span>1</span><span>2</span><span>3</span><span>4</span></div>
+                            </div>
+                        </div>
+                        <div class="slider-row">
+                            <span class="slider-label">Travail</span>
+                            <div class="slider-wrap">
+                                <input type="range" id="niveau-travail" class="slider" min="1" max="4" value="1">
+                                <div class="slider-ticks"><span>1</span><span>2</span><span>3</span><span>4</span></div>
+                            </div>
+                        </div>
+                        <button class="btn-predire" onclick="genererPrediction()">Prédire</button>
+                        <textarea id="prediction-display" class="prediction-textarea" placeholder="Votre prédiction générée..."></textarea>
+                    </div>
+
+                    <!-- Commentaire Final -->
+                    <div class="consult-card">
+                        <h2>Commentaire Final de Consultation</h2>
+                        <textarea id="commentaires" class="commentaire-textarea" placeholder="Saisissez vos notes ici...">${data.commentaire || ''}</textarea>
+                    </div>
+
+                    <!-- Bouton Fin -->
+                    <button class="btn-pill" onclick="terminerConsultation()">
+                        FIN DE CONSULTATION
+                    </button>
+
+                </div>
+            `;
+        }
+
+        function demarrerConsultation() {
+            fetch("/predictIF/ActionServlet?todo=demarrer-consultation", { method: 'POST' })
+                .then(() => {
+                    document.getElementById("btn-pret").disabled = true;
+                    document.getElementById("section-travail").style.display = "block";
+                })
+                .catch(err => alert('Erreur : ' + err));
+        }
+
+        function genererPrediction() {
+            const amour = document.getElementById('niveau-amour').value;
+            const sante = document.getElementById('niveau-sante').value;
+            const travail = document.getElementById('niveau-travail').value;
+
+            document.getElementById('prediction-display').value = "Chargement des visions astro-psychiques...";
+
+            fetch(`/predictIF/ActionServlet?todo=generer-prediction&amour=${amour}&sante=${sante}&travail=${travail}`)
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById('prediction-display').value = data.prediction || "Énergie instable, veuillez réessayer.";
+                })
+                .catch(() => {
+                    document.getElementById('prediction-display').value =
+                        `Énergie perçue — Amour : ${amour}/4, Santé : ${sante}/4, Travail : ${travail}/4.`;
+                });
+        }
+
+        function terminerConsultation() {
+            const commentaire = document.getElementById('commentaires').value;
+            const params = new URLSearchParams({
+                todo: 'terminer-consultation',
+                commentaire: commentaire
+            });
+
+            fetch("/predictIF/ActionServlet", {
+                method: 'POST',
+                body: params,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+                .then(() => chargerConsultation())
+                .catch(err => alert('Erreur : ' + err));
+        }
+    </script>
+</body>
 </html>

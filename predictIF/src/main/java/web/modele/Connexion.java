@@ -8,29 +8,48 @@ import metier.service.Service;
 
 public class Connexion extends Action {
 
+    private final Service service;
+
+    public Connexion() {
+        this.service = new Service();
+    }
+
+    public Connexion(Service service) {
+        this.service = service;
+    }
+
     @Override
     public void execute(HttpServletRequest request) {
         String mail = request.getParameter("mail");
         String password = request.getParameter("password");
 
-        Service service = new Service();
+        if (mail == null || mail.isBlank() || password == null || password.isBlank()) {
+            request.setAttribute("succes", false);
+            request.setAttribute("erreur", "Identifiants manquants");
+            return;
+        }
+
         HttpSession session = request.getSession();
-        
+
         Client client = service.authentifierClient(mail, password);
-        Employe employe = service.authentifierEmploye(mail, password);
         if (client != null) {
             session.setAttribute("clientConnecte", client);
             session.setAttribute("profil", "client");
             request.setAttribute("succes", true);
             request.setAttribute("redirection", "espaceClient.html");
-            
-        } else if (employe != null) {
+            return;
+        }
+
+        Employe employe = service.authentifierEmploye(mail, password);
+        if (employe != null) {
             session.setAttribute("employeConnecte", employe);
             session.setAttribute("profil", "employe");
             request.setAttribute("succes", true);
             request.setAttribute("redirection", "espaceEmploye.html");
-        } else {
-            request.setAttribute("succes", false);
+            return;
         }
+
+        request.setAttribute("succes", false);
+        request.setAttribute("erreur", "Identifiants incorrects");
     }
 }

@@ -27,6 +27,7 @@ import web.modele.ChargerMaConsultationAction;
 import web.modele.DemarrerConsultationAction;
 import web.modele.TerminerConsultationAction;
 import web.modele.GenererPredictionAction;
+import web.modele.DemanderConsultationAction;
 import web.vue.CarteClientsSerialisation;
 import web.vue.DashboardSerialisation;
 import web.vue.HistoriqueClientSerialisation;
@@ -157,6 +158,21 @@ public class ActionServlet extends HttpServlet {
                 actionPrediction.execute(request);
                 Serialisation serialisationPrediction = new GenererPredictionSerialisation();
                 serialisationPrediction.appliquer(request, response);
+                break;
+            case "demander-consultation":
+                Action actionDemander = new DemanderConsultationAction();
+                actionDemander.execute(request);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                PrintWriter pwDemander = response.getWriter();
+                Boolean succes = (Boolean) request.getAttribute("succes");
+                String erreurDemander = (String) request.getAttribute("erreur");
+                if (Boolean.TRUE.equals(succes)) {
+                    pwDemander.write("{\"succes\":true}");
+                } else {
+                    pwDemander.write("{\"succes\":false,\"erreur\":\"" + (erreurDemander != null ? erreurDemander : "Erreur inconnue") + "\"}");
+                }
+                pwDemander.close();
                 break;
             default:
                 

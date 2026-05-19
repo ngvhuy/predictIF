@@ -5,6 +5,102 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="style.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+        <style>
+            h1 {
+                font-size: 1.8rem;
+                letter-spacing: 6px;
+                text-align: center;
+                color: #c9a84c;
+                text-transform: uppercase;
+                margin-bottom: 40px;
+            }
+
+            .dashboard-grid {
+                display: grid;
+                grid-template-columns: 1fr 1.2fr 1fr;
+                gap: 24px;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            .card {
+                background-color: #13102a;
+                border: 1px solid #3a2a5e;
+                border-radius: 8px;
+                padding: 24px 20px;
+            }
+
+            .card h2 {
+                font-size: 1rem;
+                color: #c9a84c;
+                letter-spacing: 2px;
+                margin-bottom: 20px;
+                text-align: center;
+                font-weight: normal;
+            }
+
+            .col-middle { display: flex; flex-direction: column; gap: 24px; }
+
+            .liste-stats { list-style: none; padding: 0; margin: 0; }
+
+            .liste-stats li {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                padding: 12px 0;
+                border-bottom: 1px solid #2a1a4e;
+            }
+
+            .liste-stats li:last-child { border-bottom: none; }
+
+            .avatar-mini {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background-color: #3a1a6e;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+
+            .avatar-mini svg { width: 18px; height: 18px; fill: #c9a84c; }
+
+            .stat-label { flex: 1; color: #e8d5b7; font-size: 0.95rem; }
+
+            .stat-value {
+                background-color: #2a1a4e;
+                color: #c9a84c;
+                padding: 4px 10px;
+                border-radius: 4px;
+                font-size: 0.85rem;
+                white-space: nowrap;
+            }
+
+            .grand-nombre {
+                font-size: 3.5rem;
+                color: #ffffff;
+                text-align: center;
+                font-weight: bold;
+                padding: 30px 0;
+            }
+
+            .pie-container {
+                position: relative;
+                height: 260px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .vide {
+                color: #6a5a7a;
+                font-style: italic;
+                text-align: center;
+                padding: 20px 0;
+            }
+        </style>
     </head>
     <body>
         <nav>
@@ -12,14 +108,149 @@
             <ul id="nav-liens"></ul>
         </nav>
 
-        <div class="page-content">
-            <h1>Dashboard</h1>
-            <div class="placeholder">Les statistiques seront affichées ici.</div>
+        <div class="page-content" style="max-width: 1280px;">
+            <h1>Activité de l'agence</h1>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h2>Top 5 Médiums</h2>
+                    <ul class="liste-stats" id="liste-top-mediums">
+                        <li><span class="stat-label">Chargement...</span></li>
+                    </ul>
+                </div>
+
+                <div class="col-middle">
+                    <div class="card">
+                        <h2>Consultations / Médium</h2>
+                        <div class="grand-nombre" id="moyenne-consult">—</div>
+                    </div>
+                    <div class="card">
+                        <h2>Répartition Clients / Employés</h2>
+                        <div class="pie-container">
+                            <canvas id="chart-repartition"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Top 5 Clients</h2>
+                    <ul class="liste-stats" id="liste-top-clients">
+                        <li><span class="stat-label">Chargement...</span></li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
         <script src="nav.js"></script>
         <script>
-            window.onload = function() { chargerNav(); chargerFooter(); };
+            const AVATAR_SVG = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>';
+
+            const COULEURS_PIE = ['#c9a84c', '#5a3a8e', '#c060c0', '#2a1a4e', '#8a5a9a', '#e8a050'];
+
+            function pluraliserConsultation(nb) {
+                return nb + ' consultation' + (nb >= 2 ? 's' : '');
+            }
+
+            function afficherTopMediums(mediums) {
+                const ul = document.getElementById("liste-top-mediums");
+                ul.innerHTML = "";
+                if (!mediums || mediums.length === 0) {
+                    ul.innerHTML = '<li><span class="stat-label vide">Aucune donnée</span></li>';
+                    return;
+                }
+                mediums.forEach(function(m) {
+                    const li = document.createElement("li");
+                    li.innerHTML =
+                        '<div class="avatar-mini">' + AVATAR_SVG + '</div>'
+                      + '<span class="stat-label">' + m.denomination + '</span>'
+                      + '<span class="stat-value">' + pluraliserConsultation(m.nbConsultations) + '</span>';
+                    ul.appendChild(li);
+                });
+            }
+
+            function afficherTopClients(clients) {
+                const ul = document.getElementById("liste-top-clients");
+                ul.innerHTML = "";
+                if (!clients || clients.length === 0) {
+                    ul.innerHTML = '<li><span class="stat-label vide">Aucune donnée</span></li>';
+                    return;
+                }
+                clients.forEach(function(c) {
+                    const li = document.createElement("li");
+                    li.innerHTML =
+                        '<span class="stat-label">' + c.prenom + ' ' + c.nom + '</span>'
+                      + '<span class="stat-value">' + pluraliserConsultation(c.nbConsultations) + '</span>';
+                    ul.appendChild(li);
+                });
+            }
+
+            function afficherMoyenne(moy) {
+                const el = document.getElementById("moyenne-consult");
+                if (moy === null || moy === undefined || isNaN(moy)) {
+                    el.textContent = "—";
+                } else {
+                    el.textContent = Number(moy).toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+                }
+            }
+
+            function afficherPie(repartition) {
+                const ctx = document.getElementById("chart-repartition").getContext("2d");
+                if (!repartition || repartition.length === 0) {
+                    ctx.font = "14px Georgia";
+                    ctx.fillStyle = "#6a5a7a";
+                    ctx.textAlign = "center";
+                    ctx.fillText("Aucune donnée", ctx.canvas.width / 2, ctx.canvas.height / 2);
+                    return;
+                }
+                new Chart(ctx, {
+                    type: "pie",
+                    data: {
+                        labels: repartition.map(r => r.label),
+                        datasets: [{
+                            data: repartition.map(r => r.nb),
+                            backgroundColor: COULEURS_PIE.slice(0, repartition.length),
+                            borderColor: "#13102a",
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: "bottom",
+                                labels: { color: "#e8d5b7", font: { family: "Georgia", size: 12 } }
+                            }
+                        }
+                    }
+                });
+            }
+
+            async function chargerDashboard() {
+                try {
+                    const res = await fetch("/predictIF/ActionServlet?todo=dashboard");
+                    const data = await res.json();
+                    if (data.erreur) {
+                        document.querySelector(".dashboard-grid").innerHTML =
+                            '<div class="card" style="grid-column:1/-1;"><div class="vide">' + data.erreur + '</div></div>';
+                        return;
+                    }
+                    afficherTopMediums(data.topMediums);
+                    afficherTopClients(data.topClients);
+                    afficherMoyenne(data.moyenneConsultParMedium);
+                    afficherPie(data.repartitionEmployes);
+                } catch (e) {
+                    console.error(e);
+                    document.querySelector(".dashboard-grid").innerHTML =
+                        '<div class="card" style="grid-column:1/-1;"><div class="vide">Erreur de chargement.</div></div>';
+                }
+            }
+
+            window.onload = function() {
+                chargerNav();
+                chargerFooter();
+                chargerDashboard();
+            };
         </script>
     </body>
 </html>

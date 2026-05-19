@@ -678,6 +678,34 @@ public class Service {
         return topClient;
     }
     
+    public Map<Medium, Integer> getNbConsultationParMedium() {
+        List<Medium> listMedium = new ArrayList<>();
+        List<Consultation> listConsultations = new ArrayList<>();
+        Map<Medium, Integer> repartition = new HashMap<>();
+
+        try {
+            JpaUtil.creerContextePersistance();
+            listMedium = MediumDao.findAll();
+            listConsultations = ConsultationDao.findAll();
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        } finally {
+            JpaUtil.fermerContextePersistance();
+        }
+
+        for (Medium m : listMedium) {
+            repartition.put(m, 0);
+        }
+        for (Consultation c : listConsultations) {
+            Medium m = c.getMedium();
+            if (m != null && repartition.containsKey(m)) {
+                repartition.put(m, repartition.get(m) + 1);
+            }
+        }
+
+        return repartition;
+    }
+
     public Map<Employe, Integer> getNbConsultationParEmploye() {
         List<Employe> listEmploye;
         Map<Employe, Integer> repartition = new HashMap<>();

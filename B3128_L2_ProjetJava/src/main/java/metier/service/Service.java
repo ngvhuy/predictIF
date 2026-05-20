@@ -342,21 +342,19 @@ public class Service {
     }
     
     public Consultation getConsultationActuelle(Long idEmploye) {
-        Employe employe = null;
         Consultation consultation = null;
         try {
             JpaUtil.creerContextePersistance();
-            // Récupération des objets via les ID
-            employe = EmployeDao.findById(idEmploye);
+            Employe employe = EmployeDao.findById(idEmploye);
+            for (Consultation c : employe.getListeConsultations()) {
+                if (c.getHeureFin() == null) {
+                    consultation = c;
+                }
+            }
         } catch (Exception e) {
+            e.printStackTrace(System.err);
         } finally {
             JpaUtil.fermerContextePersistance();
-        }
-        
-        for (Consultation c : employe.getListeConsultations()) {
-            if (c.getHeureFin() == null){
-                consultation = c;
-            }
         }
         return consultation;
     }

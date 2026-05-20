@@ -51,18 +51,23 @@ public class MaConsultationSerialisation extends Serialisation {
 
             // Historique des consultations passées entre ce client et ce médium
             JsonArrayBuilder historiqueBuilder = Json.createArrayBuilder();
-            if (consultation.getClient() != null && consultation.getMedium() != null) {
-                for (Consultation c : consultation.getClient().getListeConsultations()) {
-                    if (c.getMedium() != null
-                            && c.getMedium().getId().equals(consultation.getMedium().getId())
-                            && !c.getId().equals(consultation.getId())
-                            && c.getHeureFin() != null) {
-                        JsonObjectBuilder histObj = Json.createObjectBuilder();
-                        histObj.add("date", c.getDate() != null ? c.getDate().toString() : "");
-                        histObj.add("commentaire", c.getCommentaire() != null ? c.getCommentaire() : "-");
-                        historiqueBuilder.add(histObj);
+            try {
+                if (consultation.getClient() != null && consultation.getMedium() != null
+                        && consultation.getClient().getListeConsultations() != null) {
+                    for (Consultation c : consultation.getClient().getListeConsultations()) {
+                        if (c.getMedium() != null
+                                && c.getMedium().getId().equals(consultation.getMedium().getId())
+                                && !c.getId().equals(consultation.getId())
+                                && c.getHeureFin() != null) {
+                            JsonObjectBuilder histObj = Json.createObjectBuilder();
+                            histObj.add("date", c.getDate() != null ? c.getDate().toString() : "");
+                            histObj.add("commentaire", c.getCommentaire() != null ? c.getCommentaire() : "-");
+                            historiqueBuilder.add(histObj);
+                        }
                     }
                 }
+            } catch (Exception e) {
+                // Collection lazy non chargée : historique vide
             }
             builder.add("historique", historiqueBuilder);
 

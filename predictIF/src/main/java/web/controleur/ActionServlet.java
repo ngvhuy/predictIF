@@ -28,6 +28,7 @@ import web.modele.DemarrerConsultationAction;
 import web.modele.TerminerConsultationAction;
 import web.modele.GenererPredictionAction;
 import web.modele.DemanderConsultationAction;
+import web.modele.InitDonneesTestAction;
 import web.vue.CarteClientsSerialisation;
 import web.vue.DashboardSerialisation;
 import web.vue.HistoriqueClientSerialisation;
@@ -158,6 +159,15 @@ public class ActionServlet extends HttpServlet {
                 actionPrediction.execute(request);
                 Serialisation serialisationPrediction = new GenererPredictionSerialisation();
                 serialisationPrediction.appliquer(request, response);
+                break;
+            case "init-donnees-test":
+                Action actionInit = new InitDonneesTestAction();
+                actionInit.execute(request);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                PrintWriter pwInit = response.getWriter();
+                pwInit.write("{\"rapport\":\"" + request.getAttribute("rapport").toString().replace("\n", "\\n") + "\",\"nbClients\":" + request.getAttribute("nbClients") + "}");
+                pwInit.close();
                 break;
             case "demander-consultation":
                 Action actionDemander = new DemanderConsultationAction();

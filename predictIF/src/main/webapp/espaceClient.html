@@ -128,6 +128,14 @@
                             if (!estOuvert) li.classList.add("ouvert");
                         });
 
+                        const btnReserver = details.querySelector(".btn-reserver");
+                        if (btnReserver) {
+                            btnReserver.addEventListener("click", function(e) {
+                                e.stopPropagation();
+                                reserverConsultation(m.id, btnReserver);
+                            });
+                        }
+
                         ul.appendChild(li);
                         ul.appendChild(details);
                     });
@@ -135,6 +143,33 @@
                     document.getElementById("liste-mediums").innerHTML = "<li>Impossible de charger les médiums.</li>";
                 }
             }
+
+            function reserverConsultation(idMedium, btn) {
+                btn.disabled = true;
+                btn.textContent = "Réservation en cours...";
+
+                fetch("/predictIF/ActionServlet?todo=demander-consultation&idMedium=" + idMedium, { method: "POST" })
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.succes) {
+                            btn.textContent = "Réservé ✓";
+                            btn.style.borderColor = "#27ae60";
+                            btn.style.color = "#27ae60";
+                        } else {
+                            btn.textContent = data.erreur || "Aucun employé disponible";
+                            btn.style.borderColor = "#e74c3c";
+                            btn.style.color = "#e74c3c";
+                            btn.disabled = false;
+                        }
+                    })
+                    .catch(() => {
+                        btn.textContent = "Erreur, réessayez";
+                        btn.style.borderColor = "#e74c3c";
+                        btn.style.color = "#e74c3c";
+                        btn.disabled = false;
+                    });
+            }
+
             window.onload = function() { chargerNav(); chargerFooter(); listerMediums(); };
         </script>
     </body>
